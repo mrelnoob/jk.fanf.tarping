@@ -182,7 +182,9 @@ dir.create("output/texts") # I could also create my packages directly in my func
 ##### * 1.3. Creating scripts for custom functions -----------------------------
 # ---------------------------------------------------------------------------- #
 
-file.create(... = "R/01_00_ipa_data_analyses.R")
+file.create(... = "R/01_01_prep_functions.R")
+file.create(... = "R/01_02_cleaning_functions.R")
+file.create(... = "R/01_03_exploration_functions.R")
 
 
 

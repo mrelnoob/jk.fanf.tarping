@@ -11,29 +11,11 @@ source(file = here::here("R/01_03_exploration_functions.R")) # I need to source 
 ##### * 1.1. Data import and preparation ---------------------------------------
 # ---------------------------------------------------------------------------- #
 
-.pardefault <- par() # To save the default graphical parameters (in case I want to restore them).
-df <- model_datasets(response.var = "effectiveness")
+# .pardefault <- par() # To save the default graphical parameters (in case I want to restore them).
+# df <- model_datasets(response.var = "effectiveness")
 
-readr::read_csv(here::here("mydata", "erad.csv"), col_names = TRUE, col_types =
-                  readr::cols(
-                    manager_id = readr::col_factor(),
-                    xp_id = readr::col_factor(),
-                    eff_eradication = readr::col_factor(c("0", "1")),
-                    high_eff = readr::col_factor(c("0", "1")),
-                    goals = readr::col_factor(),
-                    geomem = readr::col_factor(c("0", "1")),
-                    maxveg = readr::col_factor(c("0", "1")),
-                    uprootexcav = readr::col_factor(c("0", "1")),
-                    fully_tarped = readr::col_factor(c("0", "1")),
-                    stripsoverlap_ok = readr::col_factor(c("0", "1")),
-                    tarpfix_multimethod = readr::col_factor(c("0", "1")),
-                    tarpfix_pierced = readr::col_factor(c("0", "1")),
-                    plantation = readr::col_factor(c("0", "1")),
-                    repairs = readr::col_factor(c("0", "1")),
-                    add_control = readr::col_factor(c("0", "1")),
-                    pb_fixation = readr::col_factor(c("0", "1")),
-                    pb_durability = readr::col_factor(c("0", "1")))) %>%
-  dplyr::mutate(effectiveness = effectiveness/10) %>% # For 'effectiveness' to be look like a percentage
+
+df %>% dplyr::mutate(effectiveness = effectiveness/10) %>% # For 'effectiveness' to be look like a percentage
   # that could be modelled using a Beta Regression Model.
   dplyr::mutate(effectiveness = ifelse(effectiveness == 1, 0.999, effectiveness)) %>%
   dplyr::mutate(distance_cent = scale(x = distance, center = TRUE, scale = FALSE)) %>%

@@ -158,7 +158,7 @@ renv::history()          # Browse previous commits (with git)
 # ---------------------------------------------------------------------------- #
 
 # To create a folder containing my data and functions:
-dir.create("data")
+dir.create("data") # In which I manually paste my raw dataset!
 dir.create("R")
 # To create other useful folders for my project:
 dir.create("output")
@@ -181,27 +181,20 @@ dir.create("output/texts") # I could also create my packages directly in my func
 
 ##### * 1.3. Creating scripts for custom functions -----------------------------
 # ---------------------------------------------------------------------------- #
-
+usethis::use_pipe() # To be able to use pipes (i.e. %>%). ONLY WORKS WITH PACKAGES! If you are not
+# building a package (like me today), you'll have to explicitly call the {magrittr} package.
 file.create(... = "R/01_01_prep_functions.R")
 file.create(... = "R/01_02_cleaning_functions.R")
 file.create(... = "R/01_03_exploration_functions.R")
+file.create(... = "R/02_01_eff_modelling_functions.R")
 
 
 
-
-
-
-
-
-##### A CONTINUER§§§§§ ----
-##### A CONTINUER§§§§§ ----
-##### A CONTINUER§§§§§ ----
 
 ##### * 1.4. Creating reports (RMarkdown) --------------------------------------
 # ---------------------------------------------------------------------------- #
 
-file.create(... = "output/texts/ppl.tits.exploration_report.Rmd")
-file.create(... = "output/texts/ppl.tits.intermediate_analyses_report.Rmd") # Using this command,
+file.create(... = "output/texts/exploratory_data_analyses.Rmd") # Using this command,
 # a .Rmd file will be created but will lack the YAML header skeleton that should thus be manually
 # placed at the top of the document.
 # NOTE: for guidance to use .Rmd documents with {targets}, please refer to the {targets} related
@@ -224,7 +217,7 @@ file.create(... = "output/texts/ppl.tits.intermediate_analyses_report.Rmd") # Us
 #     (e.g. csl: my_style.csl) and pasting the said style in the same folder as before.
 # Thus, I pasted my BibTex file in the same folder as my .Rdm file. But in the case where my .Rmd
 # file would be at the root of my package, I need to tell R to ignore it:
-usethis::use_build_ignore("ppl.tits_biblio.bib")
+usethis::use_build_ignore("mybiblio.bib") # Does not exist, it's just an example!
 # For practical reasons, this .bib file will certainly be updated many times during the duration
 # of the project. Also, it may be useful to manually edit the file to shorten the reference tags
 # since Zotero tends to create long tag using the name of the 1st author, the 1st work of the title

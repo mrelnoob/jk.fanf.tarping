@@ -17,7 +17,7 @@
 #' mydata <- import_raw_data()
 #' }
 import_raw_data <- function(){
-  x <- readr::read_delim(here::here("mydata", "data_tarping_x.csv"), delim = ";", col_names = TRUE)
+  x <- readr::read_delim(here::here("data", "data_tarping_x.csv"), delim = ";", col_names = TRUE)
   return(x)
 }
 

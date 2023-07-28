@@ -2,12 +2,14 @@
 source(file = here::here("R/01_01_prep_functions.R")) # I need to do that because one of the functions
 # below uses one of the functions from the sourced R file.
 
+library(magrittr)
+
 
 
 ### _______________
-#' Clean Data Types
+#' Clean data types
 #'
-#' @description The function `clean_my_data` automatically imports the \emph{raw_data} of the knotweed's
+#' @description The function `clean_my_data` automatically imports the \emph{raw_data} of the knotweed
 #' tarping survey and cleans by transforming character variables into factors, ordinal variables into
 #' ordered factors, and boolean/binary variables into factors.
 #' @return A cleaned tibble.
@@ -16,8 +18,7 @@ source(file = here::here("R/01_01_prep_functions.R")) # I need to do that becaus
 #' to consider it as a numeric variable. The 2nd solution would be more parsimonious (less levels and
 #' thus lighter models) but would assume that intervals between each level (between 0 and 1,
 #' between 1 and 2, etc.) are equals when it's not a necessarily true assumption (for "plantation",
-#' it's probably not). The 1st solution will cause models to add polynomial terms to my factor levels
-#' (see marked pages in my web browsers). \cr
+#' it's probably not). The 1st solution will cause models to add polynomial terms to my factor levels. \cr
 #' I also coded "planned_duration" as an ordinal variable but it there's no problem here because I will
 #' probably not use it in statistical analyses.
 #'
@@ -68,8 +69,8 @@ clean_my_data <- function(){
 #' variables to be used as \strong{predictors/explanatory variables} (removing all the variables that
 #' should not be used to model \emph{reg_stripsoverlap}'s variations).
 #' @param response.var A character string specifying which modelling dataset should be produced (either:
-#' efficiency", "edges", "overlaps", or "tarpedarea"):
-#' * "efficiency" will produce the dataset for the 3 efficiency evaluation variables (namely \emph{
+#' effectiveness", "edges", "overlaps", or "tarpedarea"):
+#' * "effectiveness" will produce the dataset for the 3 effectiveness evaluation variables (namely \emph{
 #' eff_eradication}, \emph{eff_expansion} and \emph{eff_vigour});
 #' * "edges" will produce the dataset having for response variable the tarping operations that observed
 #' regrowth at the edge of the tarped area (at the end of the operation or during the latest visit to the
@@ -85,9 +86,9 @@ clean_my_data <- function(){
 #'
 #' @examples
 #' \dontrun{
-#' eff_model <- model_datasets(response.var = "efficiency")
+#' eff_data <- model_datasets(response.var = "effectiveness")
 #' }
-model_datasets <- function(response.var = c("efficiency", "edges", "overlaps",
+model_datasets <- function(response.var = c("effectiveness", "edges", "overlaps",
                                             "tarpedarea")){
 
   ppp <- clean_my_data()
@@ -97,8 +98,8 @@ model_datasets <- function(response.var = c("efficiency", "edges", "overlaps",
                                          preparation == "uprooting", 1, 0)) -> qqq # Exclude rows which
   # belong to crushing-tarping trials, and creates a new variable called "uprootexcav"!
 
-  ### For the 3 "efficiency" models
-  if (response.var == "efficiency") {
+  ### For the 3 "effectiveness" models
+  if (response.var == "effectiveness") {
     qqq <- dplyr::mutate(.data = qqq,
                          high_eff = ifelse(stringr::str_detect(latest_regrowth, stringr::regex("few.", dotall = TRUE)) |
                                              eff_eradication == "1", 1, 0)) %>%
@@ -107,10 +108,10 @@ model_datasets <- function(response.var = c("efficiency", "edges", "overlaps",
     # (quite similar to grep)!
 
     qqq <- dplyr::mutate(.data = qqq,
-                         efficiency = rowMeans(x = qqq[,80:82], na.rm = FALSE))
+                         effectiveness = rowMeans(x = qqq[,80:82], na.rm = FALSE))
 
 
-    tapioca <- qqq[,c("manager_id", "xp_id", "efficiency", "eff_eradication", "high_eff",
+    tapioca <- qqq[,c("manager_id", "xp_id", "effectiveness", "eff_eradication", "high_eff",
                       "latitude", "longitude", "elevation", "goals",
                       "freq_monitoring", "slope", "difficulty_access", "shade", "forest", "ruggedness",
                       "granulometry", "obstacles", "flood",
@@ -156,7 +157,8 @@ model_datasets <- function(response.var = c("efficiency", "edges", "overlaps",
       dplyr::mutate_if(is_binary, factor)
 
     tapioca <- qqq[,c("manager_id", "xp_id", "reg_stripsoverlap",
-                      "latitude", "longitude", "elevation", "slope", "flood", "difficulty_access","shade", "forest", "ruggedness",
+                      "latitude", "longitude", "elevation", "slope", "flood", "difficulty_access","shade",
+                      "forest", "ruggedness",
                       "granulometry", "obstacles", "stand_surface",
                       "geomem", "geotex",
                       "maxveg", "uprootexcav", "levelling", "fully_tarped", "distance",
@@ -174,7 +176,8 @@ model_datasets <- function(response.var = c("efficiency", "edges", "overlaps",
 
     tapioca <- qqq[,c("manager_id", "xp_id", "lreg_tarpedarea",
                       "latitude", "longitude", "elevation", "slope", "flood",
-                      "difficulty_access", "shade", "forest", "ruggedness", "granulometry", "obstacles", "stand_surface",
+                      "difficulty_access", "shade", "forest", "ruggedness", "granulometry", "obstacles",
+                      "stand_surface",
                       "geomem", "geotex", "woven_geotex",
                       "maxveg", "uprootexcav", "levelling", "fully_tarped", "distance",
                       "stripsoverlap_ok", "tarpfix_multimethod", "tarpfix_pierced", "pierced_tarpinstall",

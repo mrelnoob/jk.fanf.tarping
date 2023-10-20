@@ -36,10 +36,10 @@ source(file = here::here("R/01_03_exploration_functions.R")) # I need to source 
 ```
 \
 In our efforts to build valid and meaningful models to explore the potentially influencing drivers of the success/failure of tarping operations for the control of Japanese knotweed *s.l.*, we had to learn more about our data.  
-To explain the variations of our **four response variables** (i.e. *effectiveness*, *high_eff*, *lreg_edges*, and *reg_overlaps*), we created four slightly different sub-datasets from our global dataset. These sub-datasets differed in their *sample size* and in the *potential explanatory variables* they contained (because of our working hypotheses). They varied in their sample size because of the varying numbers of missing values in their associated response variables (i.e. NAs), and they varied in the potential explanatory variables they contained because we did not hypothesized that all response variables would be explained by the same set of explanatory variables. The present documents presents, for **each one** of the four response variables, the results of the **exploratory data analyses** and basic **assumption checks** performed on their respective sub-datasets.  
+To explain the variations of our **four response variables** (i.e. *effectiveness*, *eradication*, *reg_edges*, and *reg_overlaps*), we created four slightly different sub-datasets from our global dataset. These sub-datasets differed in their *sample size* and in the *potential explanatory variables* they contained (because of our working hypotheses). They varied in their sample size because of the varying numbers of missing values in their associated response variables (i.e. NAs), and they varied in the potential explanatory variables they contained because we did not hypothesized that all response variables would be explained by the same set of explanatory variables. The present documents presents, for **each one** of the four response variables, the results of the **exploratory data analyses** and basic **assumption checks** performed on their respective sub-datasets.  
 Various aspects of our data (e.g. outliers, variables distribution, multicollinearity among predictors, homogeneity of variances, independence, potential interactions, multivariate relationships, linearity etc.) were explored in this document, mostly following Bolker (2007), Zuur *et al.* (2010), and Harrell (2015). However, as the response variables were of different nature (e.g. binary, continuous), they would be modelled using different types of models with varying assumptions:
 
-* The *effectiveness* and *high_eff* variables shared the same sub-dataset because we decided to analyse them using the same set of candidate *a priori* models. The former variable is a sort of *satisfaction score* estimated by the managers and can be modelled as a percentage using **beta regressions** while the latter, which relates to cases of knotweed (near-)eradication, is a binary variable that should be modelled using some type of **logistic regression**.
+* The *effectiveness* and *eradication* variables shared the same sub-dataset because we decided to analyse them using the same set of candidate *a priori* models. The former variable is a sort of *satisfaction score* estimated by the managers and can be modelled as a percentage using **beta regressions** while the latter, which relates to cases of knotweed (near-)eradication, is a binary variable that should be modelled using some type of **logistic regression**.
 * The two remaining response variables indicated the presence of knotweed regrowths at various key locations of the tarping set-ups, and should thus also be modelled using methods of the *logistic regression family*.
 
 Naturally, most actual models assumptions were checked after fitting the models. Our intention here was simply to improve our knowledge of the data and identify potentially problematic variables upstream. As our global dataset contained many potential predictors (*p* = 85), much effort was indeed directed toward reducing their number and keeping only the most reliable and important ones relative to our hypotheses. In other words, we tried to reduce the dimensionality of the data. 
@@ -54,7 +54,7 @@ For the meaning of all variables, the reader is referred to Appendix §§§ *** 
 
 # - Exploration of the sub-dataset related to tarping *effectiveness*
 \
-The first thing to do here was to prepare the sub-dataset that will be used to model the responses of the *effectiveness variables* (i.e. **effectiveness** and **high_eff**). To do so, the following steps have been performed:
+The first thing to do here was to prepare the sub-dataset that will be used to model the responses of the *effectiveness variables* (i.e. **effectiveness** and **eradication**). To do so, the following steps have been performed:
 
 * We imported the subset of predictors and covariates that we wanted to use to model tarping effectiveness (based on our knowledge and hypotheses).
 * We left out observations that were too recent (tarping operations installed less than 2 growing seasons ago) and those for which we could not obtain an *effectiveness score* (i.e. NA).
@@ -282,7 +282,7 @@ The next step in our data exploration was to plot the response variables against
 
 ### To plot a response variable against all predictors/covariates, we will have to do use a for loop or the facet_wrap function of ggplot (or equivalent).
 # For the "effectiveness" variable (bounded continuous variable):
-erad %>% dplyr::select(-manager_id, -xp_id, -goals, -eff_eradication, -high_eff, -latitude, -longitude) %>%
+erad %>% dplyr::select(-manager_id, -xp_id, -goals, -eff_eradication, -eradication, -latitude, -longitude) %>%
   dplyr::mutate_if(is.factor, as.numfactor) %>% 
   tidyr::pivot_longer(-c(effectiveness), # Means that all columns of `mydata` need to be reshaped except "effectiveness" (works as well with the form `!effectiveness`, and we can place it somewhere else: actually, it is the `cols =` argument)! We have to work in the long-format because that's how the tidyverse and thus ggplot2 love to work...
                                names_to = "Predictor", # Gives the name of the new grouping variable while "values_to" gives the name of the variable that will be created from the data stored in the cell value.
@@ -316,14 +316,14 @@ Various interesting observations can be made from these scatterplots:
 \
 \
 
-### - Relationships between *high_eff* and its potential explanatory variables
+### - Relationships between *eradication* and its potential explanatory variables
 \
-Since *high_eff* will be modelled using logistic regressions, it is very important to ensure the respect of the **linearity assumption** between the outcome on the *logit scale* and each numeric predictor, for instance using Box-Tidwell tests or scatterplots. The main issue here is to get the values of the response variable on the logit scale. To do so, we have to build a logistic model incorporating all potential predictors to extract expected probabilities. A drawback from this approach is that the toy model can easily be misspecified in the process: for that reason, we actually checked this assumption iteratively for each *a priori* candidate model built for analyses (the scatterplots displayed below only serve to illustrate what transformations were actually applied to linearize relationships).
+Since *eradication* will be modelled using logistic regressions, it is very important to ensure the respect of the **linearity assumption** between the outcome on the *logit scale* and each numeric predictor, for instance using Box-Tidwell tests or scatterplots. The main issue here is to get the values of the response variable on the logit scale. To do so, we have to build a logistic model incorporating all potential predictors to extract expected probabilities. A drawback from this approach is that the toy model can easily be misspecified in the process: for that reason, we actually checked this assumption iteratively for each *a priori* candidate model built for analyses (the scatterplots displayed below only serve to illustrate what transformations were actually applied to linearize relationships).
 
-```{r erad linearity scatterplot, fig.align='center', fig.cap="**Figure 2.8.** Bivariate scatterplot between the *high efficacy* variable on the *logit scale* and each potential numeric predictor", fig.width=12, fig.height=9, message=FALSE, comment=NA, warning=FALSE}
-eff2 <- erad[,c("high_eff", "distance", "followups", "obstacles", "sedicover_height", "slope", "stand_surface", "tarping_duration")]
-model <- glm(high_eff ~., data = eff2, family = binomial)
-# Predict the probability (p) of high efficacy:
+```{r erad linearity scatterplot, fig.align='center', fig.cap="**Figure 2.8.** Bivariate scatterplot between the *eradication* variable on the *logit scale* and each potential numeric predictor", fig.width=12, fig.height=9, message=FALSE, comment=NA, warning=FALSE}
+eff2 <- erad[,c("eradication", "distance", "followups", "obstacles", "sedicover_height", "slope", "stand_surface", "tarping_duration")]
+model <- glm(eradication ~., data = eff2, family = binomial)
+# Predict the probability (p) of eradication:
 probabilities <- predict(model, type = "response")
 # Transforming predictors
 mydata <- eff2 %>%
@@ -345,23 +345,23 @@ ggplot2::ggplot(mydata, ggplot2::aes(y = logit, x = predictor.value))+
 rm(eff2, model, probabilities, predictors, mydata)
 ```
 
-This figure shows that log-transforming *distance*, *sedicover_height* and *stand_surface* acceptably linearized their relationship with *high_eff* expressed on the logit scale.
+This figure shows that log-transforming *distance*, *sedicover_height* and *stand_surface* acceptably linearized their relationship with *eradication* expressed on the logit scale.
 
 More general scatterplots can further be used to ensure the absence of bivariate **(quasi-)perfect separation** between a predictor and the response variable, which is highly problematic for logistic models fitted using Maximum Likelihood (Allison, 2004).
 
-```{r erad bivariate plot2, fig.align='center', fig.cap="**Figure 2.9.** Multivariate representation of the *high efficacy* variable against each potential explanatory variable", fig.width=12, fig.height=9, message=FALSE, comment=NA, warning=FALSE}
+```{r erad bivariate plot2, fig.align='center', fig.cap="**Figure 2.9.** Multivariate representation of the *eradication* variable against each potential explanatory variable", fig.width=12, fig.height=9, message=FALSE, comment=NA, warning=FALSE}
 erad %>% dplyr::select(-manager_id, -xp_id, -goals, -eff_eradication, -effectiveness, -latitude, -longitude) %>%
   dplyr::mutate_if(is.factor, as.numfactor) %>% 
-  tidyr::pivot_longer(-c(high_eff), 
+  tidyr::pivot_longer(-c(eradication), 
                                names_to = "Predictor", 
                                values_to = "Value") %>% 
-  ggplot2::ggplot(ggplot2::aes(x = Value, y = high_eff)) +
+  ggplot2::ggplot(ggplot2::aes(x = Value, y = eradication)) +
   ggplot2::facet_wrap(~Predictor, scales = "free_x", strip.position = "bottom") +
   ggplot2::geom_point(size = 1.5, alpha = 0.8, col = "coral") +
   #ggplot2::scale_y_continuous(limits=c(0,10.5)) +
   ggplot2::geom_smooth(method = "lm", na.rm = TRUE, size = 1, col = "darkred") + 
   ggplot2::scale_colour_manual(values = c("coral", "darkred")) +
-  ggplot2::labs(x = "Predictor value", y = "High efficacy", col = "Plantation") +
+  ggplot2::labs(x = "Predictor value", y = "Eradication", col = "Plantation") +
   ggthemes::theme_hc(style = "darkunica") +
   ggplot2::theme(panel.border = ggplot2::element_blank(),
           legend.key = ggplot2::element_blank(),
@@ -375,7 +375,7 @@ erad %>% dplyr::select(-manager_id, -xp_id, -goals, -eff_eradication, -effective
           legend.position = "right")
 ```
 
-Although most relationships look fine, we can see from these scatterplots that there is a clear case of **perfect separation** between *high_eff* and *fully_tarped*! We will have to medel this response variable using a penalised regression method, such as the LASSO or a Ridge regression.
+Although most relationships look fine, we can see from these scatterplots that there is a clear case of **perfect separation** between *eradication* and *fully_tarped*! We will have to model this response variable using a penalised regression method, such as the LASSO or a Ridge regression.
 \
 \
    
@@ -390,7 +390,7 @@ rm(erad1)
 ```
 
 According to Fox (2008), for simple linear regression models, problematic heterogeneity of variance occurs when the ratio between the largest and smallest variance is 4 or more. Consequently, there is a possibility for the following variables to become problematic for modelling: *elevation*, *flood*, *stand_surface*, *tarping_duration*, *sedicover_height*, and *trench_depth*. Still, actual problematic patterns will be better observable by plotting residuals against model fitted values.
-As *high_eff* is binomial, **heteroscedasticity** is not a problem as variance is assumed to be heterogeneous in logistic regression models.
+As *eradication* is binomial, **heteroscedasticity** is not a problem as variance is assumed to be heterogeneous in logistic regression models.
 \
 \
    
@@ -444,11 +444,11 @@ readr::write_csv(x = erad, file = here::here("data", "erad.csv"), append = FALSE
 
 
 
-# - Exploration of the sub-dataset related to the response variable indicating knotweed regrowths at the edge of the tarped area (i.e. *lreg_edges*)
+# - Exploration of the sub-dataset related to the response variable indicating knotweed regrowths at the edge of the tarped area (i.e. *reg_edges*)
 \
-The first thing to do here was to prepare the sub-dataset that will be used to model the responses of the *lreg_edges* variable. To do so, the following steps have been performed:
+The first thing to do here was to prepare the sub-dataset that will be used to model the responses of the *reg_edges* variable. To do so, the following steps have been performed:
 
-* We selected the subset of predictors and covariates that will be used to model *lreg_edges*;
+* We selected the subset of predictors and covariates that will be used to model *reg_edges*;
 * We left out the observations for which we could not obtain information on regrowths (i.e. NA);
 * Finally, we imputed missing values using **Random Forest** and the `missForest` package (Stekhoven & Buehlmann, 2012). 
 
@@ -457,7 +457,7 @@ The table below presents the *out-of-bag (OOB) imputation error* estimates for e
 ```{r redges import & imput, include=FALSE}
 redges <- model_datasets(response.var = "edges")
 redges <- dplyr::mutate(.data = redges, 
-                        lreg_edges = as.factor(x = lreg_edges),
+                        reg_edges = as.factor(x = reg_edges),
                         reg_elsewhere = as.factor(x = reg_elsewhere),
                         uprootexcav = as.factor(x = uprootexcav))
 
@@ -622,7 +622,7 @@ rm(num.redges, res.cor.redges, res.pcor.redges)
 
 Many interesting patterns can be observed in this correlation matrix. Among them, we can see that:
 
-* The *lreg_edges* variable seems to be negatively correlated with *distance*, as we hypothesized. 
+* The *reg_edges* variable seems to be negatively correlated with *distance*, as we hypothesized. 
 * *geomem* is extremely negatively correlated with *geotex*, which is logical as one is the opposite of the other. 
 * Naturally, *followups* is strongly positively correlated with *repairs* and *add_control*. These latter two variables are also quite correlated with the variables related to *degradations*.
 * *tarpfix_multimethod* seems to be strongly positively correlated with *trench_depth*, *tarpfix_pierced* and *plantation*, which is logical as trenches, staples and plantations are considered strong fabric fixation methods. 
@@ -632,7 +632,7 @@ Many interesting patterns can be observed in this correlation matrix. Among them
 * *followups* is positively correlated with *degradation* and *reg_elsewhere*.
 
 It is worth reminding that accounting for multivariate relationships, interactions and the effect of our tarping operations (dropped for the current correlation matrix) will certainly affect the observed patterns.
-Still, at this stage and in accordance with the hierarchy of hypotheses we would like to test for the *lreg_edges* variable, we decided to drop the following variables: *geotex* and *degradation*.
+Still, at this stage and in accordance with the hierarchy of hypotheses we would like to test for the *reg_edges* variable, we decided to drop the following variables: *geotex* and *degradation*.
 
 ```{r redges corrdrop}
 redges %>% dplyr::select(-geotex, -degradation) -> redges
@@ -657,13 +657,13 @@ This figure confirms that most variables are far from being normally distributed
 \
 \
 
-### - Relationships between *lreg_edges* and its potential explanatory variables
+### - Relationships between *reg_edges* and its potential explanatory variables
 \
-Since *lreg_edges* will be modelled using logistic regressions, it is very important to ensure the respect of the **linearity assumption** between the outcome on the *logit scale* and each numeric predictor, for instance using Box-Tidwell tests or scatterplots. The main issue here is to get the values of the response variable on the logit scale. To do so, we have to build a logistic model incorporating all potential predictors to extract expected probabilities. A drawback from this approach is that the toy model can easily be misspecified in the process: for that reason, we actually checked this assumption iteratively for each *a priori* candidate model built for analyses (the scatterplots displayed below only serve to illustrate what transformations were actually applied to linearize relationships).
+Since *reg_edges* will be modelled using logistic regressions, it is very important to ensure the respect of the **linearity assumption** between the outcome on the *logit scale* and each numeric predictor, for instance using Box-Tidwell tests or scatterplots. The main issue here is to get the values of the response variable on the logit scale. To do so, we have to build a logistic model incorporating all potential predictors to extract expected probabilities. A drawback from this approach is that the toy model can easily be misspecified in the process: for that reason, we actually checked this assumption iteratively for each *a priori* candidate model built for analyses (the scatterplots displayed below only serve to illustrate what transformations were actually applied to linearize relationships).
 
-```{r redges linearity scatterplot, fig.align='center', fig.cap="**Figure 3.7.** Bivariate scatterplot between of the *lreg_edges* variable on the *logit scale* and each potential numeric predictor", fig.width=12, fig.height=9, message=FALSE, comment=NA, warning=FALSE}
-eff2 <- redges[,c("lreg_edges", "distance", "followups", "obstacles", "slope", "stand_surface", "tarping_duration", "trench_depth")]
-model <- glm(lreg_edges ~., data = eff2, family = binomial)
+```{r redges linearity scatterplot, fig.align='center', fig.cap="**Figure 3.7.** Bivariate scatterplot between of the *reg_edges* variable on the *logit scale* and each potential numeric predictor", fig.width=12, fig.height=9, message=FALSE, comment=NA, warning=FALSE}
+eff2 <- redges[,c("reg_edges", "distance", "followups", "obstacles", "slope", "stand_surface", "tarping_duration", "trench_depth")]
+model <- glm(reg_edges ~., data = eff2, family = binomial)
 # Predict the probability (p) of regrowths at the edge:
 probabilities <- predict(model, type = "response")
 # Transforming predictors
@@ -685,19 +685,19 @@ ggplot2::ggplot(mydata, ggplot2::aes(y = logit, x = predictor.value))+
 rm(eff2, model, probabilities, predictors, mydata)
 ```
 
-This figure shows that log-transforming *distance* and *stand_surface* could help linearize their relationship with *lreg_edges* expressed on the logit scale.
+This figure shows that log-transforming *distance* and *stand_surface* could help linearize their relationship with *reg_edges* expressed on the logit scale.
 
 More general scatterplots can further be used to ensure the absence of bivariate **(quasi-)perfect separation** between a predictor and the response variable, which is highly problematic for logistic models fitted using Maximum Likelihood (Allison, 2004).
 
-```{r redges bivariate plot, fig.align='center', fig.cap="**Figure 3.8.** Multivariate representation of the *lreg_edges* against each potential explanatory variable", fig.width=12, fig.height=9, message=FALSE, comment=NA, warning=FALSE}
+```{r redges bivariate plot, fig.align='center', fig.cap="**Figure 3.8.** Multivariate representation of the *reg_edges* against each potential explanatory variable", fig.width=12, fig.height=9, message=FALSE, comment=NA, warning=FALSE}
 ### To plot a response variable against all predictors/covariates, we will have to do use a for loop or the facet_wrap function of ggplot (or equivalent).
-# For the "lreg_edges" variable (bounded continuous variable):
+# For the "reg_edges" variable (bounded continuous variable):
 redges %>% dplyr::select(-manager_id, -xp_id, -latitude, -longitude) %>%
   dplyr::mutate_if(is.factor, as.numfactor) %>% 
-  tidyr::pivot_longer(-c(lreg_edges), # Means that all columns of `mydata` need to be reshaped except "lreg_edges" & "fully_tarped" (works as well with the form `!lreg_edges`, and we can place it somewhere else: actually, it is the `cols =` argument)! We have to work in the long-format because that's how the tidyverse and thus ggplot2 love to work...
+  tidyr::pivot_longer(-c(reg_edges), # Means that all columns of `mydata` need to be reshaped except "reg_edges" & "fully_tarped" (works as well with the form `!reg_edges`, and we can place it somewhere else: actually, it is the `cols =` argument)! We have to work in the long-format because that's how the tidyverse and thus ggplot2 love to work...
                                names_to = "Predictor", # Gives the name of the new grouping variable while "values_to" gives the name of the variable that will be created from the data stored in the cell value.
                                values_to = "Value") %>% 
-  ggplot2::ggplot(ggplot2::aes(x = Value, y = lreg_edges)) +
+  ggplot2::ggplot(ggplot2::aes(x = Value, y = reg_edges)) +
   ggplot2::facet_wrap(~Predictor, scales = "free_x", strip.position = "bottom") +
   ggplot2::geom_point(size = 1.5, alpha = 0.8, col = "palevioletred4") +
   ggplot2::scale_y_continuous(limits=c(0,1)) +
@@ -722,12 +722,12 @@ There is no apparent sign of bivariate (quasi-)perfect separation, so regular lo
    
 ### - Interactions among variables
 
-Finally, to further investigate potentially meaningful **interactions** among our variables, we used co-plots (i.e. conditioning plots) between some of our predictors and *lreg_edges*, based on plausible hypotheses. 
-However, as *lreg_edges* is a binary factor, the use of coplots was more complicated than for a numeric variable. Visualizing categorical variables as a function of other variables, especially quantitative ones, is not ideal in a regular conditioning plot as points will tend to be stacked on each other and as logistic curves should be fitted instead of regression lines, which is quite tedious to automatise in R. Consequently, we chose to draw *spineplots within the coplot panels* (**conditioning spineplots**) by transforming quantitative variables into two-level factors ("low" and "high" - based on whether observations had values below or above average, meaning that the number of observations is not distributed equitably between the two categories). The plots created could be viewed as some sort of *graphical contingency tables*. Unfortunately, combining spineplots with coplots creates a graphic bug in the drawing of the axes (linked to the coplot function internals) that we could not fix yet. We apologize for that.
+Finally, to further investigate potentially meaningful **interactions** among our variables, we used co-plots (i.e. conditioning plots) between some of our predictors and *reg_edges*, based on plausible hypotheses. 
+However, as *reg_edges* is a binary factor, the use of coplots was more complicated than for a numeric variable. Visualizing categorical variables as a function of other variables, especially quantitative ones, is not ideal in a regular conditioning plot as points will tend to be stacked on each other and as logistic curves should be fitted instead of regression lines, which is quite tedious to automatise in R. Consequently, we chose to draw *spineplots within the coplot panels* (**conditioning spineplots**) by transforming quantitative variables into two-level factors ("low" and "high" - based on whether observations had values below or above average, meaning that the number of observations is not distributed equitably between the two categories). The plots created could be viewed as some sort of *graphical contingency tables*. Unfortunately, combining spineplots with coplots creates a graphic bug in the drawing of the axes (linked to the coplot function internals) that we could not fix yet. We apologize for that.
 
 To avoid overloading the present document, only the most informative plots are displayed. 
 
-```{r redges coplot 1, fig.align='center', fig.cap="**Figure 3.9a.** Conditioning spineplot of *lreg_edges* displaying a three-way interaction between *distance*, *stand_surface* (in log-scale) and *trench_depth*. Within each panel, the proportion of operations that found knotweed regrowths at the edge of the tarped area (dark orange) and the proportion of those that did not (light orange) is displayed while left-hand rectangles display these proportions for *short* tarping distances (below average) and right-hand rectangles display them for *long* tarping distances (above average)", message=FALSE, comment=NA, warning=FALSE}
+```{r redges coplot 1, fig.align='center', fig.cap="**Figure 3.9a.** Conditioning spineplot of *reg_edges* displaying a three-way interaction between *distance*, *stand_surface* (in log-scale) and *trench_depth*. Within each panel, the proportion of operations that found knotweed regrowths at the edge of the tarped area (dark orange) and the proportion of those that did not (light orange) is displayed while left-hand rectangles display these proportions for *short* tarping distances (below average) and right-hand rectangles display them for *long* tarping distances (above average)", message=FALSE, comment=NA, warning=FALSE}
 
 par(.pardefault) # To restore defaults graphical parameters
 
@@ -741,14 +741,14 @@ pan.fun = function(x, y, ...){
 }
 
 ### Three-way interaction between distance, stand_surface and trench_depth:
-graphics::coplot(lreg_edges ~ distance | log(stand_surface) * trench_depth, data = rrr, 
+graphics::coplot(reg_edges ~ distance | log(stand_surface) * trench_depth, data = rrr, 
                  panel = pan.fun, number = 3, overlap = 0.01, rows = 1)
 ```
 
 This conditioning spineplot is quite informative because it shows a changing pattern as we move from bottom to top, but globally not from left to right. It could be the sign of an existing interaction between *distance* and *trench depth*, but not with *stand surface*: with increasing trench depth, the proportion of tarping operations that found no knotweed regrowths at the edges (i.e. light orange rectangles) when tarping distances were above average (i.e. right-hand rectangles within each of the 9 panels) increased, regardless of the size of the knotweed stands. Actually, it is hard to say if stand surface did not play any role here but it appears that there was no unequivocal trend.
 
 
-```{r redges coplot 2, fig.align='center', fig.cap="**Figure 3.9b.** Conditioning spineplot of *lreg_edges* displaying a two-way interaction between *slope* and *obstacles*. Within each panel, the proportion of operations that found knotweed regrowths at the edge of the tarped area (dark orange) and the proportion of those that did not (light orange) is displayed while left-hand rectangles display these proportions for *gentle* slopes (below average) and right-hand rectangles display them for *steep* slopes (above average)", message=FALSE, comment=NA, warning=FALSE}
+```{r redges coplot 2, fig.align='center', fig.cap="**Figure 3.9b.** Conditioning spineplot of *reg_edges* displaying a two-way interaction between *slope* and *obstacles*. Within each panel, the proportion of operations that found knotweed regrowths at the edge of the tarped area (dark orange) and the proportion of those that did not (light orange) is displayed while left-hand rectangles display these proportions for *gentle* slopes (below average) and right-hand rectangles display them for *steep* slopes (above average)", message=FALSE, comment=NA, warning=FALSE}
 
 redges %>% dplyr::mutate(slope = ifelse(slope <= mean(slope), "Gentle", "Steep")) %>%
   dplyr::mutate(slope = factor(slope, levels=c("Gentle", "Steep"))) -> rrr
@@ -760,14 +760,14 @@ pan.fun = function(x, y, ...){
 }
 
 ### Two-way interaction between slope and obstacles:
-graphics::coplot(lreg_edges ~ slope | obstacles, data = rrr, 
+graphics::coplot(reg_edges ~ slope | obstacles, data = rrr, 
                  panel = pan.fun, number = 3, overlap = 0.01, rows = 1)
 ```
 
 This above conditioning spineplot seems to indicate that the effect of increasing *slopes* on the proportion of regrowths at the edge increased when there were many *obstacles* on the tarped area.
 
 
-```{r redges coplot 3, fig.align='center', fig.cap="**Figure 3.9c.** Conditioning spineplot of *lreg_edges* displaying a three-way interaction between *obstacles*, *geomem* and *tarpfix_multimethod*. Within each panel, the proportion of operations that found knotweed regrowths at the edge of the tarped area (dark orange) and the proportion of those that did not (light orange) is displayed, while the left-hand rectangles display these proportions for *low* obstacle proportions (below average) and the right-hand rectangles display them for *high* obstacle proportions (above average)", message=FALSE, comment=NA, warning=FALSE}
+```{r redges coplot 3, fig.align='center', fig.cap="**Figure 3.9c.** Conditioning spineplot of *reg_edges* displaying a three-way interaction between *obstacles*, *geomem* and *tarpfix_multimethod*. Within each panel, the proportion of operations that found knotweed regrowths at the edge of the tarped area (dark orange) and the proportion of those that did not (light orange) is displayed, while the left-hand rectangles display these proportions for *low* obstacle proportions (below average) and the right-hand rectangles display them for *high* obstacle proportions (above average)", message=FALSE, comment=NA, warning=FALSE}
 
 redges %>% dplyr::mutate(obstacles = ifelse(obstacles <= mean(obstacles), "Low", "High")) %>%
   dplyr::mutate(obstacles = factor(obstacles, levels=c("Low", "High"))) -> rrr
@@ -779,17 +779,17 @@ pan.fun = function(x, y, ...){
 }
 
 ### Three-way interaction between obstacles, geomem and tarpfix_multimethod:
-graphics::coplot(lreg_edges ~ obstacles | geomem * tarpfix_multimethod, data = rrr, 
+graphics::coplot(reg_edges ~ obstacles | geomem * tarpfix_multimethod, data = rrr, 
                  panel = pan.fun, number = 3, overlap = 0.01, rows = 1)
 ```
 
 This very interesting conditioning spineplot seems to indicate that when not much efforts had been taken to fix fabrics to the ground, increasing *obstacles* increased the likelihood of finding regrowths at the edge of the tarped area. However, when multiple methods were used for fixation, this trend seemed to be quite reduced except when *geomembranes* were used! This could mean that *geomembranes* are harder to properly fix to the ground and/or around obstacles (compared to *geotextiles*).
 
 
-```{r redges coplot 4, fig.align='center', fig.cap="**Figure 3.9d.** Conditioning spineplot of *lreg_edges* displaying a two-way interaction between *obstacles* and *distance*. Within each panel, the proportion of operations that found knotweed regrowths at the edge of the tarped area (dark orange) and the proportion of those that did not (light orange) is displayed while left-hand rectangles display these proportions for *low* obstacle proportions (below average) and right-hand rectangles display them for *high* obstacle proportions (above average)", message=FALSE, comment=NA, warning=FALSE}
+```{r redges coplot 4, fig.align='center', fig.cap="**Figure 3.9d.** Conditioning spineplot of *reg_edges* displaying a two-way interaction between *obstacles* and *distance*. Within each panel, the proportion of operations that found knotweed regrowths at the edge of the tarped area (dark orange) and the proportion of those that did not (light orange) is displayed while left-hand rectangles display these proportions for *low* obstacle proportions (below average) and right-hand rectangles display them for *high* obstacle proportions (above average)", message=FALSE, comment=NA, warning=FALSE}
 
 ### Two-way interaction between obstacles and obstacles:
-graphics::coplot(lreg_edges ~ obstacles | distance, data = rrr, 
+graphics::coplot(reg_edges ~ obstacles | distance, data = rrr, 
                  panel = pan.fun, number = 3, overlap = 0.01, rows = 1)
 ```
 

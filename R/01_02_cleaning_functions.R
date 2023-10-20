@@ -69,7 +69,7 @@ clean_my_data <- function(){
 #' variables to be used as \strong{predictors/explanatory variables} (removing all the variables that
 #' should not be used to model \emph{reg_stripsoverlap}'s variations).
 #' @param response.var A character string specifying which modelling dataset should be produced (either:
-#' effectiveness", "edges", "overlaps", or "tarpedarea"):
+#' effectiveness", "edges", or "overlaps"):
 #' * "effectiveness" will produce the dataset for the 3 effectiveness evaluation variables (namely \emph{
 #' eff_eradication}, \emph{eff_expansion} and \emph{eff_vigour});
 #' * "edges" will produce the dataset having for response variable the tarping operations that observed
@@ -77,8 +77,6 @@ clean_my_data <- function(){
 #' site);
 #' * "overlaps" produce the dataset having for response variable the tarping operations that observed
 #' regrowth at strip overlaps;
-#' * "tarpedarea" will produce the dataset having for response variable the tarping operations that observed
-#' regrowth at somewhere on the area covered by the fabric.
 #'
 #' @return A tibble.
 #' @export
@@ -88,8 +86,7 @@ clean_my_data <- function(){
 #' \dontrun{
 #' eff_data <- model_datasets(response.var = "effectiveness")
 #' }
-model_datasets <- function(response.var = c("effectiveness", "edges", "overlaps",
-                                            "tarpedarea")){
+model_datasets <- function(response.var = c("effectiveness", "edges", "overlaps")){
 
   ppp <- clean_my_data()
   ppp %>%
@@ -101,7 +98,7 @@ model_datasets <- function(response.var = c("effectiveness", "edges", "overlaps"
   ### For the 3 "effectiveness" models
   if (response.var == "effectiveness") {
     qqq <- dplyr::mutate(.data = qqq,
-                         high_eff = ifelse(stringr::str_detect(latest_regrowth, stringr::regex("few.", dotall = TRUE)) |
+                         eradication = ifelse(stringr::str_detect(latest_regrowth, stringr::regex("few.", dotall = TRUE)) |
                                              eff_eradication == "1", 1, 0)) %>%
       dplyr::mutate_if(is_binary, factor)
     # With str_detect and regex, I matched all obs. with latest_regrowth that begins with "few"
@@ -111,7 +108,7 @@ model_datasets <- function(response.var = c("effectiveness", "edges", "overlaps"
                          effectiveness = rowMeans(x = qqq[,80:82], na.rm = FALSE))
 
 
-    tapioca <- qqq[,c("manager_id", "xp_id", "effectiveness", "eff_eradication", "high_eff",
+    tapioca <- qqq[,c("manager_id", "xp_id", "effectiveness", "eff_eradication", "eradication",
                       "latitude", "longitude", "elevation", "goals",
                       "freq_monitoring", "slope", "difficulty_access", "shade", "forest", "ruggedness",
                       "granulometry", "obstacles", "flood",
@@ -123,16 +120,16 @@ model_datasets <- function(response.var = c("effectiveness", "edges", "overlaps"
                       "degradation", "pb_fixation", "pb_durability")]
   }
 
-  ### For the "lreg_edges" model
+  ### For the "reg_edges" model
   if (response.var == "edges") {
-    qqq <- dplyr::mutate(.data = qqq, lreg_edges =
+    qqq <- dplyr::mutate(.data = qqq, reg_edges =
                            ifelse(c(grepl("*edges*", latest_regrowth) | grepl("*edges*", untarped_regrowth)), 1, 0)) %>%
       dplyr::mutate(.data = qqq, reg_elsewhere =
                       ifelse(reg_staples == 1 | reg_stripsoverlap == 1 | reg_obstacles == 1 |
                                reg_holes == 1 | reg_plantations == 1 | reg_pierced == 1, yes = 1, no = 0)) %>%
       dplyr::filter(fully_tarped == 1) # Only for fully tarped operations!
 
-    tapioca <- qqq[,c("manager_id", "xp_id", "lreg_edges",
+    tapioca <- qqq[,c("manager_id", "xp_id", "reg_edges",
                       "latitude", "longitude", "elevation", "slope", "flood", "difficulty_access", "shade", "forest",
                       "ruggedness", "granulometry", "obstacles", "stand_surface",
                       "geomem", "geotex",
@@ -166,24 +163,6 @@ model_datasets <- function(response.var = c("effectiveness", "edges", "overlaps"
                       "sedicover_height", "trench_depth", "plantation",
                       "repairs", "add_control", "freq_monitoring", "pb_fixation", "pb_durability",
                       "reg_elsewhere", "tarping_duration")]
-  }
-
-  ### For the "tarpedarea" model
-  if (response.var == "tarpedarea") {
-    qqq <- dplyr::mutate(.data = qqq, lreg_tarpedarea =
-                           ifelse(c(grepl("*tarpedarea*", latest_regrowth) |
-                                      grepl("*tarpedarea*", untarped_regrowth)), 1, 0))
-
-    tapioca <- qqq[,c("manager_id", "xp_id", "lreg_tarpedarea",
-                      "latitude", "longitude", "elevation", "slope", "flood",
-                      "difficulty_access", "shade", "forest", "ruggedness", "granulometry", "obstacles",
-                      "stand_surface",
-                      "geomem", "geotex", "woven_geotex",
-                      "maxveg", "uprootexcav", "levelling", "fully_tarped", "distance",
-                      "stripsoverlap_ok", "tarpfix_multimethod", "tarpfix_pierced", "pierced_tarpinstall",
-                      "sedicover_height", "trench_depth", "plantation",
-                      "repairs", "add_control", "freq_monitoring",
-                      "pb_fixation", "pb_durability", "pb_trampiercing", "reg_edges", "tarping_duration")]
   }
   return(tapioca)
 }

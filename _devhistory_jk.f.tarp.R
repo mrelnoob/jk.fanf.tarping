@@ -187,6 +187,9 @@ file.create(... = "R/01_01_prep_functions.R")
 file.create(... = "R/01_02_cleaning_functions.R")
 file.create(... = "R/01_03_exploration_functions.R")
 file.create(... = "R/02_01_eff_modelling_functions.R")
+file.create(... = "R/02_02_eradication_modelling.R")
+file.create(... = "R/02_03_reg_edges_modelling.R")
+file.create(... = "R/02_04_reg_stripsoverlap_modelling.R")
 
 
 
@@ -246,7 +249,7 @@ usethis::use_build_ignore("mybiblio.bib") # Does not exist, it's just an example
 ########### *-----------------------------------------------------* ############
 ############################ Main Git commits ##################################
 # ---------------------------------------------------------------------------- #
-usethis::use_git(message = ":boom: Created the project structure!")
+usethis::use_git(message = ":boom: Exported the 1st updated results!")
 usethis::use_git(message = ":metal: Created a new function")
 usethis::use_git(message = ":zap: Ignoring something")
 usethis::use_git(message = ":pencil: Documented a function or wrote something")

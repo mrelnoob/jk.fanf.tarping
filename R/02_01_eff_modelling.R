@@ -18,7 +18,7 @@ readr::read_csv(here::here("data", "erad.csv"), col_names = TRUE, col_types =
                     manager_id = readr::col_factor(),
                     xp_id = readr::col_factor(),
                     eff_eradication = readr::col_factor(c("0", "1")),
-                    high_eff = readr::col_factor(c("0", "1")),
+                    eradication = readr::col_factor(c("0", "1")),
                     goals = readr::col_factor(),
                     geomem = readr::col_factor(c("0", "1")),
                     maxveg = readr::col_factor(c("0", "1")),
@@ -35,8 +35,8 @@ readr::read_csv(here::here("data", "erad.csv"), col_names = TRUE, col_types =
   dplyr::mutate(effectiveness = effectiveness/10) %>% # For 'effectiveness' to be look like a percentage that could
   # be modelled using a Beta Regression Model.
   dplyr::mutate(effectiveness = ifelse(effectiveness == 1, 0.999, effectiveness)) %>%
-  dplyr::mutate(distance_cent = scale(x = distance, center = TRUE, scale = FALSE)) %>%
-  dplyr::mutate(st_surface_cent = scale(x = stand_surface, center = TRUE, scale = FALSE)) %>%
+  dplyr::mutate(distance_cent = scale(log2(distance+1), center = TRUE, scale = FALSE)) %>%
+  dplyr::mutate(st_surface_cent = scale(log2(stand_surface), center = TRUE, scale = FALSE)) %>%
   dplyr::mutate(followups_cent = scale(x = followups, center = TRUE, scale = FALSE)) -> eff
 summary(eff)
 
@@ -579,10 +579,10 @@ R.ajust <- rbind(R.ajust, data.frame(Model=12, R2=R2[1]))
 ##### Model 13 #####
 # -----------------
 
-Cand.mod[[13]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + geomem, data = eff,
+Cand.mod[[13]] <- glmmTMB::glmmTMB(formula = effectiveness~followups_cent * pb_fixation, data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
-### Model evaluation (Fluttersbys method):
+# ### Model evaluation (Fluttersbys method):
 # ggplot2::ggplot(data = NULL) + ggplot2::geom_point(ggplot2::aes(y = residuals(Cand.mod[[13]],
 #                                                                               type = "pearson"), x = fitted(Cand.mod[[13]])))
 # QQline <- qq.line(resid(Cand.mod[[13]], type = "pearson"))
@@ -620,7 +620,7 @@ R.ajust <- rbind(R.ajust, data.frame(Model=13, R2=R2[1]))
 ##### Model 14 #####
 # -----------------
 
-Cand.mod[[14]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + pb_fixation, data = eff,
+Cand.mod[[14]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + plantation, data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
 ### Model evaluation (Fluttersbys method):
@@ -1030,7 +1030,7 @@ R.ajust <- rbind(R.ajust, data.frame(Model=23, R2=R2[1]))
 ##### Model 24 #####
 # -----------------
 
-Cand.mod[[24]] <- glmmTMB::glmmTMB(formula = effectiveness~pb_fixation + obstacles, data = eff,
+Cand.mod[[24]] <- glmmTMB::glmmTMB(formula = effectiveness~slope + plantation, data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
 ### Model evaluation (Fluttersbys method):
@@ -1153,7 +1153,7 @@ R.ajust <- rbind(R.ajust, data.frame(Model=26, R2=R2[1]))
 ##### Model 27 #####
 # -----------------
 
-Cand.mod[[27]] <- glmmTMB::glmmTMB(formula = effectiveness~obstacles + plantation, data = eff,
+Cand.mod[[27]] <- glmmTMB::glmmTMB(formula = effectiveness~obstacles + slope, data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
 ### Model evaluation (Fluttersbys method):
@@ -1194,10 +1194,10 @@ R.ajust <- rbind(R.ajust, data.frame(Model=27, R2=R2[1]))
 ##### Model 28 #####
 # -----------------
 
-Cand.mod[[28]] <- glmmTMB::glmmTMB(formula = effectiveness~obstacles + slope, data = eff,
+Cand.mod[[28]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped * st_surface_cent, data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
-### Model evaluation (Fluttersbys method):
+# ### Model evaluation (Fluttersbys method):
 # ggplot2::ggplot(data = NULL) + ggplot2::geom_point(ggplot2::aes(y = residuals(Cand.mod[[28]],
 #                                                                               type = "pearson"), x = fitted(Cand.mod[[28]])))
 # QQline <- qq.line(resid(Cand.mod[[28]], type = "pearson"))
@@ -1213,7 +1213,7 @@ Cand.mod[[28]] <- glmmTMB::glmmTMB(formula = effectiveness~obstacles + slope, da
 # }
 # par(.pardefault) # To restore defaults graphical parameters
 # plot(resid ~ fitted(Cand.mod[[28]]))
-
+#
 # ### Model evaluation (with the 'performance' package)
 # performance::check_autocorrelation(Cand.mod[[28]])
 # performance::check_collinearity(Cand.mod[[28]])
@@ -1399,7 +1399,7 @@ R.ajust <- rbind(R.ajust, data.frame(Model=32, R2=R2[1]))
 ##### Model 33 #####
 # -----------------
 
-Cand.mod[[33]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + fully_tarped + pb_fixation, data = eff,
+Cand.mod[[33]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + fully_tarped + slope, data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
 ### Model evaluation (Fluttersbys method):
@@ -1440,7 +1440,7 @@ R.ajust <- rbind(R.ajust, data.frame(Model=33, R2=R2[1]))
 ##### Model 34 #####
 # -----------------
 
-Cand.mod[[34]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + fully_tarped + slope, data = eff,
+Cand.mod[[34]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + fully_tarped + log2(sedicover_height+1), data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
 ### Model evaluation (Fluttersbys method):
@@ -1481,7 +1481,7 @@ R.ajust <- rbind(R.ajust, data.frame(Model=34, R2=R2[1]))
 ##### Model 35 #####
 # ------------------
 
-Cand.mod[[35]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + fully_tarped + log2(sedicover_height+1), data = eff,
+Cand.mod[[35]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + fully_tarped + log2(stand_surface), data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
 ### Model evaluation (Fluttersbys method):
@@ -1522,7 +1522,7 @@ R.ajust <- rbind(R.ajust, data.frame(Model=35, R2=R2[1]))
 ##### Model 36 #####
 # -----------------
 
-Cand.mod[[36]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + fully_tarped + log2(stand_surface), data = eff,
+Cand.mod[[36]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + fully_tarped + log2(tarping_duration), data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
 ### Model evaluation (Fluttersbys method):
@@ -1563,7 +1563,7 @@ R.ajust <- rbind(R.ajust, data.frame(Model=36, R2=R2[1]))
 ##### Model 37 #####
 # -----------------
 
-Cand.mod[[37]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + fully_tarped + log2(tarping_duration), data = eff,
+Cand.mod[[37]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + log2(stand_surface) + obstacles, data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
 ### Model evaluation (Fluttersbys method):
@@ -1604,7 +1604,7 @@ R.ajust <- rbind(R.ajust, data.frame(Model=37, R2=R2[1]))
 ##### Model 38 #####
 # -----------------
 
-Cand.mod[[38]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + pb_fixation + followups, data = eff,
+Cand.mod[[38]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + log2(stand_surface) + pb_fixation, data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
 ### Model evaluation (Fluttersbys method):
@@ -1645,7 +1645,7 @@ R.ajust <- rbind(R.ajust, data.frame(Model=38, R2=R2[1]))
 ##### Model 39 #####
 # -----------------
 
-Cand.mod[[39]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + log2(stand_surface) + followups, data = eff,
+Cand.mod[[39]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + pb_fixation + followups, data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
 ### Model evaluation (Fluttersbys method):
@@ -1686,7 +1686,7 @@ R.ajust <- rbind(R.ajust, data.frame(Model=39, R2=R2[1]))
 ##### Model 40 #####
 # -----------------
 
-Cand.mod[[40]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + log2(stand_surface) + obstacles, data = eff,
+Cand.mod[[40]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(stand_surface) + geomem, data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
 ### Model evaluation (Fluttersbys method):
@@ -1727,7 +1727,7 @@ R.ajust <- rbind(R.ajust, data.frame(Model=40, R2=R2[1]))
 ##### Model 41 #####
 # -----------------
 
-Cand.mod[[41]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + log2(stand_surface) + pb_fixation, data = eff,
+Cand.mod[[41]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(stand_surface) + pb_fixation, data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
 ### Model evaluation (Fluttersbys method):
@@ -1768,7 +1768,7 @@ R.ajust <- rbind(R.ajust, data.frame(Model=41, R2=R2[1]))
 ##### Model 42 #####
 # -----------------
 
-Cand.mod[[42]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + pb_fixation + followups, data = eff,
+Cand.mod[[42]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(stand_surface) + log2(sedicover_height+1), data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
 ### Model evaluation (Fluttersbys method):
@@ -1809,7 +1809,7 @@ R.ajust <- rbind(R.ajust, data.frame(Model=42, R2=R2[1]))
 ##### Model 43 #####
 # -----------------
 
-Cand.mod[[43]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(stand_surface) + geomem, data = eff,
+Cand.mod[[43]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(stand_surface) + slope, data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
 ### Model evaluation (Fluttersbys method):
@@ -1850,7 +1850,7 @@ R.ajust <- rbind(R.ajust, data.frame(Model=43, R2=R2[1]))
 ##### Model 44 #####
 # -----------------
 
-Cand.mod[[44]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(stand_surface) + followups, data = eff,
+Cand.mod[[44]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(stand_surface) + uprootexcav, data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
 ### Model evaluation (Fluttersbys method):
@@ -1891,7 +1891,7 @@ R.ajust <- rbind(R.ajust, data.frame(Model=44, R2=R2[1]))
 ##### Model 45 #####
 # -----------------
 
-Cand.mod[[45]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(stand_surface) + pb_fixation, data = eff,
+Cand.mod[[45]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(stand_surface) + log2(tarping_duration), data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
 ### Model evaluation (Fluttersbys method):
@@ -1932,7 +1932,7 @@ R.ajust <- rbind(R.ajust, data.frame(Model=45, R2=R2[1]))
 ##### Model 46 #####
 # -----------------
 
-Cand.mod[[46]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(stand_surface) + log2(sedicover_height+1), data = eff,
+Cand.mod[[46]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + followups + obstacles, data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
 ### Model evaluation (Fluttersbys method):
@@ -1973,7 +1973,7 @@ R.ajust <- rbind(R.ajust, data.frame(Model=46, R2=R2[1]))
 ##### Model 47 #####
 # -----------------
 
-Cand.mod[[47]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(stand_surface) + slope, data = eff,
+Cand.mod[[47]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + obstacles + pb_fixation, data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
 ### Model evaluation (Fluttersbys method):
@@ -2014,7 +2014,7 @@ R.ajust <- rbind(R.ajust, data.frame(Model=47, R2=R2[1]))
 ##### Model 48 #####
 # -----------------
 
-Cand.mod[[48]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(stand_surface) + uprootexcav, data = eff,
+Cand.mod[[48]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + obstacles + slope, data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
 ### Model evaluation (Fluttersbys method):
@@ -2055,7 +2055,7 @@ R.ajust <- rbind(R.ajust, data.frame(Model=48, R2=R2[1]))
 ##### Model 49 #####
 # -----------------
 
-Cand.mod[[49]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(stand_surface) + log2(tarping_duration), data = eff,
+Cand.mod[[49]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + obstacles + uprootexcav, data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
 ### Model evaluation (Fluttersbys method):
@@ -2074,7 +2074,7 @@ Cand.mod[[49]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(s
 # }
 # par(.pardefault) # To restore defaults graphical parameters
 # plot(resid ~ fitted(Cand.mod[[49]]))
-
+#
 # ### Model evaluation (with the 'performance' package)
 # performance::check_autocorrelation(Cand.mod[[49]])
 # performance::check_collinearity(Cand.mod[[49]])
@@ -2096,10 +2096,10 @@ R.ajust <- rbind(R.ajust, data.frame(Model=49, R2=R2[1]))
 ##### Model 50 #####
 # -----------------
 
-Cand.mod[[50]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + followups + geomem, data = eff,
+Cand.mod[[50]] <- glmmTMB::glmmTMB(formula = effectiveness~distance_cent * st_surface_cent, data = eff,
                                    family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
 
-### Model evaluation (Fluttersbys method):
+# ### Model evaluation (Fluttersbys method):
 # ggplot2::ggplot(data = NULL) + ggplot2::geom_point(ggplot2::aes(y = residuals(Cand.mod[[50]],
 #                                                                               type = "pearson"), x = fitted(Cand.mod[[50]])))
 # QQline <- qq.line(resid(Cand.mod[[50]], type = "pearson"))
@@ -2115,7 +2115,7 @@ Cand.mod[[50]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + follow
 # }
 # par(.pardefault) # To restore defaults graphical parameters
 # plot(resid ~ fitted(Cand.mod[[50]]))
-
+#
 # ### Model evaluation (with the 'performance' package)
 # performance::check_autocorrelation(Cand.mod[[50]])
 # performance::check_collinearity(Cand.mod[[50]])
@@ -2134,244 +2134,56 @@ R.ajust <- rbind(R.ajust, data.frame(Model=50, R2=R2[1]))
 
 
 
-##### Model 51 #####
-# -----------------
-
-Cand.mod[[51]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + followups + obstacles, data = eff,
-                                   family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
-
-### Model evaluation (Fluttersbys method):
-# ggplot2::ggplot(data = NULL) + ggplot2::geom_point(ggplot2::aes(y = residuals(Cand.mod[[51]],
-#                                                                               type = "pearson"), x = fitted(Cand.mod[[51]])))
-# QQline <- qq.line(resid(Cand.mod[[51]], type = "pearson"))
-# ggplot2::ggplot(data = NULL, ggplot2::aes(sample = resid(Cand.mod[[51]], type = "pearson"))) +
-#   ggplot2::stat_qq() + ggplot2::geom_abline(intercept = QQline[1], slope = QQline[2])
-# # To simulate residuals (see https://www.flutterbys.com.au/stats/tut/tut10.5a.html#h2_17):
-# dat.sim <- simulate(Cand.mod[[51]], n = 250)
-# par(mfrow = c(5, 4), mar = c(3, 3, 1, 1))
-# resid <- NULL
-# for (i in 1:nrow(dat.sim)) {
-#   e = ecdf(data.matrix(dat.sim[i, ] + runif(250, -0.5, 0.5)))
-#   resid[i] <- e(eff$effectiveness[i] + runif(250, -0.5, 0.5))
-# }
-# par(.pardefault) # To restore defaults graphical parameters
-# plot(resid ~ fitted(Cand.mod[[51]]))
-
-# ### Model evaluation (with the 'performance' package)
-# performance::check_autocorrelation(Cand.mod[[51]])
-# performance::check_collinearity(Cand.mod[[51]])
-# performance::r2_nakagawa(Cand.mod[[51]])
-#
-# # To plot the observed vs. fitted values:
-# plot(x = fitted(Cand.mod[[51]]), y = eff$effectiveness, xlab = "Fitted values", ylab = "Observed values")
-#
-# ### Exploring the model parameters and test hypotheses:
-# summary(Cand.mod[[51]])
-# family(Cand.mod[[51]])$linkinv(glmmTMB::fixef(Cand.mod[[51]])$cond) # To get interpretable coefficients.
-
-### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[51]], ~1))[1] - logLik(Cand.mod[[51]])[1])) # Methods from flutterbys.com
-R.ajust <- rbind(R.ajust, data.frame(Model=51, R2=R2[1]))
-
-
-
-##### Model 52 #####
-# -----------------
-
-Cand.mod[[52]] <- glmmTMB::glmmTMB(formula = effectiveness~plantation + pb_fixation + slope, data = eff,
-                                   family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
-
-### Model evaluation (Fluttersbys method):
-# ggplot2::ggplot(data = NULL) + ggplot2::geom_point(ggplot2::aes(y = residuals(Cand.mod[[52]],
-#                                                                               type = "pearson"), x = fitted(Cand.mod[[52]])))
-# QQline <- qq.line(resid(Cand.mod[[52]], type = "pearson"))
-# ggplot2::ggplot(data = NULL, ggplot2::aes(sample = resid(Cand.mod[[52]], type = "pearson"))) +
-#   ggplot2::stat_qq() + ggplot2::geom_abline(intercept = QQline[1], slope = QQline[2])
-# # To simulate residuals (see https://www.flutterbys.com.au/stats/tut/tut10.5a.html#h2_17):
-# dat.sim <- simulate(Cand.mod[[52]], n = 250)
-# par(mfrow = c(5, 4), mar = c(3, 3, 1, 1))
-# resid <- NULL
-# for (i in 1:nrow(dat.sim)) {
-#   e = ecdf(data.matrix(dat.sim[i, ] + runif(250, -0.5, 0.5)))
-#   resid[i] <- e(eff$effectiveness[i] + runif(250, -0.5, 0.5))
-# }
-# par(.pardefault) # To restore defaults graphical parameters
-# plot(resid ~ fitted(Cand.mod[[52]]))
-
-# ### Model evaluation (with the 'performance' package)
-# performance::check_autocorrelation(Cand.mod[[52]])
-# performance::check_collinearity(Cand.mod[[52]])
-# performance::r2_nakagawa(Cand.mod[[52]])
-#
-# # To plot the observed vs. fitted values:
-# plot(x = fitted(Cand.mod[[52]]), y = eff$effectiveness, xlab = "Fitted values", ylab = "Observed values")
-#
-# ### Exploring the model parameters and test hypotheses:
-# summary(Cand.mod[[52]])
-# family(Cand.mod[[52]])$linkinv(glmmTMB::fixef(Cand.mod[[52]])$cond) # To get interpretable coefficients.
-
-### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[52]], ~1))[1] - logLik(Cand.mod[[52]])[1])) # Methods from flutterbys.com
-R.ajust <- rbind(R.ajust, data.frame(Model=52, R2=R2[1]))
-
-
-
-##### Model 53 #####
-# -----------------
-
-Cand.mod[[53]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + obstacles + pb_fixation, data = eff,
-                                   family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
-
-### Model evaluation (Fluttersbys method):
-# ggplot2::ggplot(data = NULL) + ggplot2::geom_point(ggplot2::aes(y = residuals(Cand.mod[[53]],
-#                                                                               type = "pearson"), x = fitted(Cand.mod[[53]])))
-# QQline <- qq.line(resid(Cand.mod[[53]], type = "pearson"))
-# ggplot2::ggplot(data = NULL, ggplot2::aes(sample = resid(Cand.mod[[53]], type = "pearson"))) +
-#   ggplot2::stat_qq() + ggplot2::geom_abline(intercept = QQline[1], slope = QQline[2])
-# # To simulate residuals (see https://www.flutterbys.com.au/stats/tut/tut10.5a.html#h2_17):
-# dat.sim <- simulate(Cand.mod[[53]], n = 250)
-# par(mfrow = c(5, 4), mar = c(3, 3, 1, 1))
-# resid <- NULL
-# for (i in 1:nrow(dat.sim)) {
-#   e = ecdf(data.matrix(dat.sim[i, ] + runif(250, -0.5, 0.5)))
-#   resid[i] <- e(eff$effectiveness[i] + runif(250, -0.5, 0.5))
-# }
-# par(.pardefault) # To restore defaults graphical parameters
-# plot(resid ~ fitted(Cand.mod[[53]]))
-
-# ### Model evaluation (with the 'performance' package)
-# performance::check_autocorrelation(Cand.mod[[53]])
-# performance::check_collinearity(Cand.mod[[53]])
-# performance::r2_nakagawa(Cand.mod[[53]])
-#
-# # To plot the observed vs. fitted values:
-# plot(x = fitted(Cand.mod[[53]]), y = eff$effectiveness, xlab = "Fitted values", ylab = "Observed values")
-#
-# ### Exploring the model parameters and test hypotheses:
-# summary(Cand.mod[[53]])
-# family(Cand.mod[[53]])$linkinv(glmmTMB::fixef(Cand.mod[[53]])$cond) # To get interpretable coefficients.
-
-### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[53]], ~1))[1] - logLik(Cand.mod[[53]])[1])) # Methods from flutterbys.com
-R.ajust <- rbind(R.ajust, data.frame(Model=53, R2=R2[1]))
-
-
-
-##### Model 54 #####
-# -----------------
-
-Cand.mod[[54]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + obstacles + slope, data = eff,
-                                   family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
-
-### Model evaluation (Fluttersbys method):
-# ggplot2::ggplot(data = NULL) + ggplot2::geom_point(ggplot2::aes(y = residuals(Cand.mod[[54]],
-#                                                                               type = "pearson"), x = fitted(Cand.mod[[54]])))
-# QQline <- qq.line(resid(Cand.mod[[54]], type = "pearson"))
-# ggplot2::ggplot(data = NULL, ggplot2::aes(sample = resid(Cand.mod[[54]], type = "pearson"))) +
-#   ggplot2::stat_qq() + ggplot2::geom_abline(intercept = QQline[1], slope = QQline[2])
-# # To simulate residuals (see https://www.flutterbys.com.au/stats/tut/tut10.5a.html#h2_17):
-# dat.sim <- simulate(Cand.mod[[54]], n = 250)
-# par(mfrow = c(5, 4), mar = c(3, 3, 1, 1))
-# resid <- NULL
-# for (i in 1:nrow(dat.sim)) {
-#   e = ecdf(data.matrix(dat.sim[i, ] + runif(250, -0.5, 0.5)))
-#   resid[i] <- e(eff$effectiveness[i] + runif(250, -0.5, 0.5))
-# }
-# par(.pardefault) # To restore defaults graphical parameters
-# plot(resid ~ fitted(Cand.mod[[54]]))
-
-# ### Model evaluation (with the 'performance' package)
-# performance::check_autocorrelation(Cand.mod[[54]])
-# performance::check_collinearity(Cand.mod[[54]])
-# performance::r2_nakagawa(Cand.mod[[54]])
-#
-# # To plot the observed vs. fitted values:
-# plot(x = fitted(Cand.mod[[54]]), y = eff$effectiveness, xlab = "Fitted values", ylab = "Observed values")
-#
-# ### Exploring the model parameters and test hypotheses:
-# summary(Cand.mod[[54]])
-# family(Cand.mod[[54]])$linkinv(glmmTMB::fixef(Cand.mod[[54]])$cond) # To get interpretable coefficients.
-
-### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[54]], ~1))[1] - logLik(Cand.mod[[54]])[1])) # Methods from flutterbys.com
-R.ajust <- rbind(R.ajust, data.frame(Model=54, R2=R2[1]))
-
-
-
-##### Model 55 #####
-# ------------------
-
-Cand.mod[[55]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + obstacles + uprootexcav, data = eff,
-                                   family = glmmTMB::beta_family(link = "logit"), REML = FALSE)
-
-### Model evaluation (Fluttersbys method):
-# ggplot2::ggplot(data = NULL) + ggplot2::geom_point(ggplot2::aes(y = residuals(Cand.mod[[55]],
-#                                                                               type = "pearson"), x = fitted(Cand.mod[[55]])))
-# QQline <- qq.line(resid(Cand.mod[[55]], type = "pearson"))
-# ggplot2::ggplot(data = NULL, ggplot2::aes(sample = resid(Cand.mod[[55]], type = "pearson"))) +
-#   ggplot2::stat_qq() + ggplot2::geom_abline(intercept = QQline[1], slope = QQline[2])
-# # To simulate residuals (see https://www.flutterbys.com.au/stats/tut/tut10.5a.html#h2_17):
-# dat.sim <- simulate(Cand.mod[[55]], n = 250)
-# par(mfrow = c(5, 4), mar = c(3, 3, 1, 1))
-# resid <- NULL
-# for (i in 1:nrow(dat.sim)) {
-#   e = ecdf(data.matrix(dat.sim[i, ] + runif(250, -0.5, 0.5)))
-#   resid[i] <- e(eff$effectiveness[i] + runif(250, -0.5, 0.5))
-# }
-# par(.pardefault) # To restore defaults graphical parameters
-# plot(resid ~ fitted(Cand.mod[[55]]))
-
-# ### Model evaluation (with the 'performance' package)
-# performance::check_autocorrelation(Cand.mod[[55]])
-# performance::check_collinearity(Cand.mod[[55]])
-# performance::r2_nakagawa(Cand.mod[[55]])
-#
-# # To plot the observed vs. fitted values:
-# plot(x = fitted(Cand.mod[[55]]), y = eff$effectiveness, xlab = "Fitted values", ylab = "Observed values")
-#
-# ### Exploring the model parameters and test hypotheses:
-# summary(Cand.mod[[55]])
-# family(Cand.mod[[55]])$linkinv(glmmTMB::fixef(Cand.mod[[55]])$cond) # To get interpretable coefficients.
-
-### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[55]], ~1))[1] - logLik(Cand.mod[[55]])[1])) # Methods from flutterbys.com
-R.ajust <- rbind(R.ajust, data.frame(Model=55, R2=R2[1]))
-
-
-
 
 
 # ------------------------------------- #
 ##### Model selection and averaging #####
 # ------------------------------------- #
 
-Model <- (1:55)
+Model <- (1:50)
 
 Candidate <- c("null",
                "log2(distance + 1) + followups", "log2(distance + 1) + fully_tarped", "log2(distance + 1) + obstacles",
                "log2(distance + 1) + log2(stand_surface)", "log2(distance + 1) + log2(sedicover_height + 1)", "log2(distance + 1) + uprootexcav",
                "followups + fully_tarped", "followups + pb_fixation", "followups + obstacles",
-               "followups + log2(stand_surface)", "followups + tarping_duration", "fully_tarped + geomem",
-               "fully_tarped + pb_fixation", "fully_tarped + log2(sedicover_height + 1)",
-               "fully_tarped + log2(stand_surface)", "fully_tarped + obstacles", "fully_tarped + tarping_duration",
-               "log2(stand_surface) + geomem", "log2(stand_surface) + obstacles", "log2(stand_surface) + plantation",
-               "log2(stand_surface) + slope", "log2(stand_surface) + tarping_duration", "pb_fixation + obstacles",
-               "uprootexcav + geomem", "uprootexcav + plantation", "obstacles + plantation",
+               "followups + log2(stand_surface)", "followups + tarping_duration", "followups * pb_fixation",
+               "fully_tarped + plantation",
+               "fully_tarped + log2(sedicover_height + 1)", # Ok n°15
+               "fully_tarped + log2(stand_surface)",
+               "fully_tarped + obstacles",
+               "fully_tarped + tarping_duration",
+               "log2(stand_surface) + geomem",
+               "log2(stand_surface) + obstacles", # Ok n°20
+               "log2(stand_surface) + plantation",
+               "log2(stand_surface) + slope",
+               "log2(stand_surface) + tarping_duration",
+               "slope + plantation",
+               "uprootexcav + geomem", # Ok n°25
+               "uprootexcav + plantation",
                "obstacles + slope",
-               "log2(distance + 1) + fully_tarped + followups", "log2(distance + 1) + fully_tarped + geomem",
-               "log2(distance + 1) + fully_tarped + obstacles", "log2(distance + 1) + fully_tarped + plantation",
-               "log2(distance + 1) + fully_tarped + pb_fixation", "log2(distance + 1) + fully_tarped + slope",
-               "log2(distance + 1) + fully_tarped + log2(sedicover_height + 1)", "log2(distance + 1) + fully_tarped + log2(stand_surface)",
-               "log2(distance + 1) + fully_tarped + tarping_duration", "log2(distance + 1) + pb_fixation + followups",
-               "log2(distance + 1) + log2(stand_surface) + followups", "log2(distance + 1) + log2(stand_surface) + obstacles",
-               "log2(distance + 1) + log2(stand_surface) + pb_fixation", "fully_tarped + pb_fixation + followups",
-               "fully_tarped + log2(stand_surface) + geomem", "fully_tarped + log2(stand_surface) + followups",
-               "fully_tarped + log2(stand_surface) + pb_fixation", "fully_tarped + log2(stand_surface) + log2(sedicover_height + 1)",
-               "fully_tarped + log2(stand_surface) + slope", "fully_tarped + log2(stand_surface) + uprootexcav",
-               "fully_tarped + log2(stand_surface) + tarping_duration", "fully_tarped + followups + geomem",
-               "fully_tarped + followups + obstacles", "plantation + pb_fixation + slope",
-               "fully_tarped + obstacles + pb_fixation", "fully_tarped + obstacles + slope",
-               "fully_tarped + obstacles + uprootexcav")
+               "followups * plantation",
+               "log2(distance + 1) + fully_tarped + followups",
+               "log2(distance + 1) + fully_tarped + geomem", # Ok n°30
+               "log2(distance + 1) + fully_tarped + obstacles",
+               "log2(distance + 1) + fully_tarped + plantation",
+               "log2(distance + 1) + fully_tarped + slope",
+               "log2(distance + 1) + fully_tarped + log2(sedicover_height + 1)",
+               "log2(distance + 1) + fully_tarped + log2(stand_surface)", # Ok n°35
+               "log2(distance + 1) + fully_tarped + tarping_duration",
+               "log2(distance + 1) + log2(stand_surface) + obstacles",
+               "log2(distance + 1) + log2(stand_surface) + pb_fixation",
+               "fully_tarped + pb_fixation + followups",
+               "fully_tarped + log2(stand_surface) + geomem",  # Ok n°40
+               "fully_tarped + log2(stand_surface) + pb_fixation",
+               "fully_tarped + log2(stand_surface) + log2(sedicover_height + 1)",
+               "fully_tarped + log2(stand_surface) + slope",
+               "fully_tarped + log2(stand_surface) + uprootexcav",
+               "fully_tarped + log2(stand_surface) + tarping_duration", # Ok n°45
+               "fully_tarped + followups + obstacles",
+               "fully_tarped + obstacles + pb_fixation",
+               "fully_tarped + obstacles + slope",
+               "fully_tarped + obstacles + uprootexcav",
+               "log2(distance + 1) * log2(stand_surface)") # Ok n°50
 
 Cand.model <- data.frame(Model, Candidate)
 
@@ -2428,6 +2240,11 @@ Var.Imp <- c("cond((Int))", "cond(log2(distance + 1))", "cond(followups)", "cond
 
 Para.model <- data.frame(Parameters, Var, Var.Imp)
 
+### Removing the models with interactions from the top-models:
+AICc[-c(32,35,48),] -> AICc # Removing the 3 lines containing the 3 interaction models. I need to
+# remove them to avoid biaising the coefficients as they, by definition, have coefficient that do not
+# mean the same thing as for the other models.
+
 ### Select the top models:
 #top.models <- MuMIn::get.models(AICc, cumsum(weight) <= 0.95) # To take those with a cumulative sum of
 # AICc weights <= 0.95
@@ -2444,7 +2261,7 @@ Parameter.model <- as.data.frame(cbind(MuMIn::coefTable(Parameter), stats::confi
 ### Improved formating:
 Parameter.model$Var <- row.names(Parameter.model)
 Parameter.model <- merge(Parameter.model, Para.model, by="Var", all=TRUE)
-Imp <- as.data.frame(format(round(MuMIn::importance(Parameter), digits=2))) # Gives each predictor a
+Imp <- as.data.frame(format(round(MuMIn::sw(Parameter), digits=2))) # Gives each predictor a
 # relative "importance" value based on the sum of the model weights of the models in which the variable
 # is included as a predictor
 colnames(Imp) <- "Imp."

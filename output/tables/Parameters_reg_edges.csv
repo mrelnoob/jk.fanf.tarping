@@ -1,0 +1,11 @@
+Response;Parameters;Imp.;Estimate (±SE);(95% CI);N model
+lreg_edges;add_control;0.23;1.068 (±0.706);"(-0.315; 2.451)";48
+lreg_edges;geomem;0.24;0.939 (±0.580);"(-0.197; 2.076)";48
+lreg_edges;log2(distance + 1);1.00;-2.350 (±0.775);"(-3.869; -0.831)";48
+lreg_edges;log2(stand_surface);0.08;0.045 (±0.130);"(-0.209; 0.300)";48
+lreg_edges;log2(trench_depth + 1);0.57;-0.224 (±0.132);"(-0.482; 0.035)";48
+lreg_edges;obstacles;0.21;0.208 (±0.142);"(-0.071; 0.487)";48
+lreg_edges;pb_fixation;0.02;0.377 (±0.662);"(-0.920; 1.674)";48
+lreg_edges;repairs;0.05;-0.141 (±0.581);"(-1.281; 0.998)";48
+lreg_edges;slope;0.04;-0.056 (±0.096);"(-0.244; 0.133)";48
+lreg_edges;tarping_duration;0.20;-0.166 (±0.106);"(-0.374; 0.042)";48

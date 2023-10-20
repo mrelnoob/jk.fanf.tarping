@@ -1,0 +1,51 @@
+Rank;Model;Response;Candidate model;k;AICc;delta AICc;W;pseudo-R2
+1;10;lreg_edges;log2(distance + 1) * log2(trench_depth + 1);5; 90.1; 0.000;0.358;0.364
+2;31;lreg_edges;log2(distance + 1) + log2(trench_depth + 1) + obstacles;5; 92.6; 2.439;0.106;0.391
+3;32;lreg_edges;log2(distance + 1) + log2(trench_depth + 1) + geomem;5; 93.3; 3.218;0.072;0.299
+4;9;lreg_edges;log2(distance + 1) + log2(trench_depth + 1);4; 93.6; 3.453;0.064;0.308
+5;41;lreg_edges;tarping_duration + log2(distance + 1) + add_control;5; 93.9; 3.746;0.055;0.297
+6;30;lreg_edges;log2(distance + 1) + log2(trench_depth + 1) + add_control;5; 94.2; 4.103;0.046;0.291
+7;38;lreg_edges;log2(distance + 1) + geomem + tarping_duration;5; 94.4; 4.309;0.042;0.297
+8;7;lreg_edges;log2(distance + 1) + geomem;4; 94.6; 4.480;0.038;0.276
+9;2;lreg_edges;log2(distance + 1) + add_control;4; 94.9; 4.808;0.032;0.266
+10;8;lreg_edges;log2(distance + 1) + tarping_duration;4; 95.2; 5.040;0.029;0.312
+11;34;lreg_edges;log2(distance + 1) + log2(trench_depth + 1) + slope;5; 95.5; 5.373;0.024;0.318
+12;16;lreg_edges;log2(stand_surface) * log2(distance + 1);5; 95.7; 5.574;0.022;0.323
+13;33;lreg_edges;log2(distance + 1) + log2(trench_depth + 1) + log2(stand_surface);5; 95.7; 5.621;0.022;0.302
+14;48;lreg_edges;log2(trench_depth + 1) + log2(distance + 1) + repairs;5; 95.7; 5.625;0.022;0.311
+15;3;lreg_edges;log2(distance + 1) + obstacles;4; 95.9; 5.760;0.020;0.341
+16;35;lreg_edges;log2(distance + 1) + log2(stand_surface) + add_control;5; 97.0; 6.866;0.012;0.269
+17;5;lreg_edges;log2(distance + 1) + pb_fixation;4; 97.3; 7.215;0.010;0.278
+18;6;lreg_edges;log2(distance + 1) + log2(stand_surface);4; 97.6; 7.460;0.009;0.267
+19;4;lreg_edges;log2(distance + 1) + repairs;4; 97.7; 7.586;0.008;0.275
+20;36;lreg_edges;log2(distance + 1) + log2(stand_surface) + obstacles;5; 98.0; 7.927;0.007;0.333
+21;37;lreg_edges;log2(distance + 1) + log2(stand_surface) + pb_fixation;5; 99.6; 9.480;0.003;0.275
+22;12;lreg_edges;log2(trench_depth + 1) + obstacles;4;107.3;17.228;0.000;0.154
+23;50;lreg_edges;log2(trench_depth + 1) + obstacles + geomem;5;107.7;17.602;0.000;0.140
+24;49;lreg_edges;log2(trench_depth + 1) + obstacles + repairs;5;108.6;18.459;0.000;0.200
+25;39;lreg_edges;log2(stand_surface) + log2(trench_depth + 1) + obstacles;5;109.1;19.003;0.000;0.171
+26;45;lreg_edges;obstacles + add_control + log2(trench_depth + 1);5;109.6;19.478;0.000;0.144
+27;25;lreg_edges;obstacles + geomem;4;109.7;19.578;0.000;0.095
+28;44;lreg_edges;obstacles + add_control + tarping_duration;5;111.8;21.721;0.000;0.127
+29;24;lreg_edges;obstacles + pb_fixation;4;111.8;21.723;0.000;0.156
+30;43;lreg_edges;obstacles + add_control + geomem;5;111.9;21.757;0.000;0.095
+31;15;lreg_edges;log2(stand_surface) + obstacles;4;112.0;21.878;0.000;0.153
+32;26;lreg_edges;obstacles + repairs;4;112.1;22.009;0.000;0.155
+33;20;lreg_edges;add_control + obstacles;4;112.2;22.054;0.000;0.101
+34;1;lreg_edges;null;2;113.0;22.931;0.000;0.015
+35;13;lreg_edges;log2(trench_depth + 1) + log2(stand_surface);4;113.3;23.193;0.000;0.052
+36;18;lreg_edges;log2(trench_depth + 1) + repairs;4;113.7;23.592;0.000;0.048
+37;27;lreg_edges;slope + geomem;4;113.7;23.637;0.000;0.046
+38;47;lreg_edges;obstacles + add_control + slope;5;113.8;23.649;0.000;0.141
+39;19;lreg_edges;log2(trench_depth + 1) + slope;4;113.8;23.706;0.000;0.046
+40;42;lreg_edges;obstacles + repairs + add_control;5;113.9;23.796;0.000;0.121
+41;11;lreg_edges;log2(trench_depth + 1) + add_control;4;113.9;23.830;0.000;0.044
+42;46;lreg_edges;obstacles + add_control + log2(stand_surface);5;113.9;23.837;0.000;0.122
+43;23;lreg_edges;add_control + tarping_duration;4;114.4;24.316;0.000;0.038
+44;17;lreg_edges;log2(stand_surface) + tarping_duration;4;114.7;24.577;0.000;0.066
+45;29;lreg_edges;slope + tarping_duration;4;115.0;24.858;0.000;0.068
+46;40;lreg_edges;log2(stand_surface) + log2(trench_depth + 1) + slope;5;115.4;25.329;0.000;0.055
+47;21;lreg_edges;add_control + pb_fixation;4;115.7;25.588;0.000;0.022
+48;14;lreg_edges;log2(stand_surface) + add_control;4;116.1;25.993;0.000;0.016
+49;28;lreg_edges;slope + pb_fixation;4;116.2;26.052;0.000;0.076
+50;22;lreg_edges;add_control + slope;4;116.5;26.378;0.000;0.012

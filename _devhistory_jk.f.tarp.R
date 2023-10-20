@@ -2,15 +2,10 @@
 ####################### DEV_HISTORY FOR {jk.fanf.tarping} ######################
 ############## *-------------------------------------------------* #############
 
-# All comments in this file or in this project are first meant for future me and, second,
-# for other so they can reproduce my work. That is why there are so many of them, so anyone can
+# All comments in this file or in this project are firstly meant for future me and, secondly,
+# for others so they can reproduce my work. That is why there are so many comments, so anyone can
 # do what I did, regardless of his/her own experience. Note also that English and R are not my
-# native tongues, so please forgive any mistakes.
-# IMPORTANT NOTE: I chose to use a {targets} pipeline to organise my data analysis procedure to ensure
-# a clean workflow and favour reproducibility. However, that also means that my code cannot be run as is
-# if you do not know how to use {targets}, so be careful!
-# Note also that I briefly explain how to use {targets} at the end of this document and I will add
-# {renv} later, if I can.
+# native languages, so please forgive any mistakes.
 
 
 
@@ -44,8 +39,8 @@
 ##### * 0.3. Package building, {targets} and RMarkdown -------------------------
 # ---------------------------------------------------------------------------- #
 
-# To optimally associate Package building, {targets}, renv and RMarkdown, I should probably refer to:
-# https://books.ropensci.org/targets/
+# To optimally associate stuff like Package building, {targets}, renv and RMarkdown, I should probably
+# refer to: https://books.ropensci.org/targets/
 
 
 
@@ -75,7 +70,7 @@ system("git init") # NOTE: the 'system()' function enables sending commands to t
 # stuff directly in a CLI/Terminal.
 # STEP 3: Verify your configuration:
 system("git config --global user.name 'fanf'")
-system("git config --global user.email 'francois.martin74190@gmail.com'")
+system("git config --global user.email 'hahaha@gmail.com'") # Note that you should use a REAL email adress!
 # Of course, you need to personalize the user.name and email. If you want the config to be
 # only true for the current project (and not global), remove the '--global' from the previous
 # lines.
@@ -85,7 +80,7 @@ system("git config --global user.email 'francois.martin74190@gmail.com'")
 # The full procedure is described here: https://help.github.com/articles/generating-ssh-keys
 # But here goes:
 system("ls -al ~/.ssh") # Check for existing SSH keys. If none is found, you must generate one.
-system("ssh-keygen -t rsa -C 'francois.martin74190@gmail.com'") # Generates a new SSH key
+system("ssh-keygen -t rsa -C 'hahaha@gmail.com'") # Generates a new SSH key
 # using the rsa algorithm (however, I was forced to do that directly in a CLI).
 system("eval '$(ssh-agent -s)'") # Checks if the ssh-agent is launched (same --> CLI).
 # If it works, it should return something like "Agent pid 59552".
@@ -102,7 +97,7 @@ usethis::use_git(message = ":tada: Initial commit") # Then restart RStudio and t
 # appear on the top-right box of RStudio.
 # STEP 6: Log in your GitHub account and create a new repository (without anything in it).
 # STEP 7: Use the following command to associate your R project with the GitHub project:
-system2("git remote add origin git@github.com:mrelnoob/ppl.ipa") # Here also, personalize
+system2("git remote add origin git@github.com:mrelnoob/jk.fanf.tarping") # Here also, personalize
 # with your own account and project names! And here again, it does not work (so --> CLI).
 # STEP 8: Finally, you can push the changes made to your local files to GitHub:
 system2("git push -u origin master") # Same (CLI).
@@ -200,8 +195,7 @@ file.create(... = "R/02_04_reg_stripsoverlap_modelling.R")
 file.create(... = "output/texts/exploratory_data_analyses.Rmd") # Using this command,
 # a .Rmd file will be created but will lack the YAML header skeleton that should thus be manually
 # placed at the top of the document.
-# NOTE: for guidance to use .Rmd documents with {targets}, please refer to the {targets} related
-# section (chapter 2 below).
+
 
 
 ### ** 1.3.1. To manage citations and bibliography ----
@@ -230,22 +224,6 @@ usethis::use_build_ignore("mybiblio.bib") # Does not exist, it's just an example
 
 
 
-########################## ********************************************* ###############################
-# -------------------------------- #
-##### 2. Populating my project #####
-# -------------------------------- #
-
-##### * 2.1. Writing functions -------------------------------------------------
-# ---------------------------------------------------------------------------- #
-
-# I may now write my scripts and associated functions --> THEN TARGETS§§§§§
-# I may now write my scripts and associated functions --> THEN TARGETS§§§§§
-# I may now write my scripts and associated functions --> THEN TARGETS§§§§§
-# I may now write my scripts and associated functions --> THEN TARGETS§§§§§
-
-
-
-
 ########### *-----------------------------------------------------* ############
 ############################ Main Git commits ##################################
 # ---------------------------------------------------------------------------- #
@@ -254,7 +232,7 @@ usethis::use_git(message = ":metal: Created a new function")
 usethis::use_git(message = ":zap: Ignoring something")
 usethis::use_git(message = ":pencil: Documented a function or wrote something")
 usethis::use_git(message = ":hammer: Ongoing programming!")
-usethis::use_git(message = ":white_check_mark: Updated the {target} pipeline")
+usethis::use_git(message = ":white_check_mark: Proofed the 'dev_history' file")
 usethis::use_git(message = ":x: Problem detected!")
 #system("git push") # Or using a CLI!
 # Don't forget to push your commits once you're sure you made no mistakes.

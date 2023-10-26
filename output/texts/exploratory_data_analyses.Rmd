@@ -35,14 +35,15 @@ source(file = here::here("R/01_03_exploration_functions.R")) # I need to source 
 .pardefault <- par() # To save the default graphical parameters (in case I want to restore them).
 ```
 \
-In our efforts to build valid and meaningful models to explore the potentially influencing drivers of the success/failure of tarping operations for the control of Japanese knotweed *s.l.*, we had to learn more about our data.  
+In our efforts to build valid and meaningful models to identify some of the drivers potentially influencing the success or failure of tarping operations for the control of Japanese knotweed *s.l.*, we had to learn more about our data.  
 To explain the variations of our **four response variables** (i.e. *effectiveness*, *eradication*, *reg_edges*, and *reg_overlaps*), we created four slightly different sub-datasets from our global dataset. These sub-datasets differed in their *sample size* and in the *potential explanatory variables* they contained (because of our working hypotheses). They varied in their sample size because of the varying numbers of missing values in their associated response variables (i.e. NAs), and they varied in the potential explanatory variables they contained because we did not hypothesized that all response variables would be explained by the same set of explanatory variables. The present documents presents, for **each one** of the four response variables, the results of the **exploratory data analyses** and basic **assumption checks** performed on their respective sub-datasets.  
 Various aspects of our data (e.g. outliers, variables distribution, multicollinearity among predictors, homogeneity of variances, independence, potential interactions, multivariate relationships, linearity etc.) were explored in this document, mostly following Bolker (2007), Zuur *et al.* (2010), and Harrell (2015). However, as the response variables were of different nature (e.g. binary, continuous), they would be modelled using different types of models with varying assumptions:
 
 * The *effectiveness* and *eradication* variables shared the same sub-dataset because we decided to analyse them using the same set of candidate *a priori* models. The former variable is a sort of *satisfaction score* estimated by the managers and can be modelled as a percentage using **beta regressions** while the latter, which relates to cases of knotweed (near-)eradication, is a binary variable that should be modelled using some type of **logistic regression**.
 * The two remaining response variables indicated the presence of knotweed regrowths at various key locations of the tarping set-ups, and should thus also be modelled using methods of the *logistic regression family*.
 
-Naturally, most actual models assumptions were checked after fitting the models. Our intention here was simply to improve our knowledge of the data and identify potentially problematic variables upstream. As our global dataset contained many potential predictors (*p* = 85), much effort was indeed directed toward reducing their number and keeping only the most reliable and important ones relative to our hypotheses. In other words, we tried to reduce the dimensionality of the data. 
+Naturally, most actual models assumptions were checked after fitting the models. Our intention here was simply to improve our knowledge of the data and identify potentially problematic variables upstream. As our global dataset contained many potential predictors (*p* = 85), much effort was indeed directed toward reducing their number and keeping only the most reliable and important ones relative to our hypotheses. In other words, we tried to reduce the dimensionality of the data.  
+It should be noted that our study is **exploratory**. That means that our goal is not to make formal inference but to *explore* potential relationships in order to generate new hypotheses (that could then be formally tested in a rigourous inferential framework). Therefore, it also means that we can slacken some modelling assumptions and that we can look at the relationships between the *response variables* and their potential *predictors* (which is absolutely forbidden when the purpose of a study is inferential). In other words, we can take some liberty because we are trying to identify relationships that should be properly tested with new data (instead of claiming that we found robust "causal" links).
 
 For the meaning of all variables, the reader is referred to Appendix §§§ *** §§§ !!!!!!
 \
@@ -179,7 +180,7 @@ rm(simu.var)
 ```
 
 After analysing random samples drawn from log-normal distributions (based on the parameters of our potentially problematic variables), we have good reason to believe that only *stand_surface* should be problematic. Consequently, we chose to delete the spotted outlier within *stand_surface* (i.e. the *stand_surface* of ca. 5000 m^2^).    
-The other variables do not seem have values that are too extreme to be possibly drawn from Normal, log-Normal or Poisson distributed variables, except *longitude*. Yet, we do not intend on truly using this variable at this point (we included it in case we need to account for some spatial autocorrelation in the models).
+The other variables do not seem to have values that are too extreme to be possibly drawn from Normal, log-Normal or Poisson distributed variables, except *longitude*. Yet, we do not intend on truly using this variable at this point (we included it in case we need to account for some spatial autocorrelation in the models).
 
 
 ```{r erad update, include=FALSE}
@@ -204,6 +205,7 @@ rm(num.data, tab)
 ```
 
 From the above histograms and table, we can see that:
+
 * Very few of our sampled variables are close to approximate a normal distribution: perhaps *latitude*, *coarse_env*, and *followups*. Surprisingly, *effectiveness* possesses "acceptable" skewness and kurtosis values yet is clearly far from a normal variable (left-dissymmetric and bounded), perhaps attesting the limited usefulness of these statistics.
 * Most variables are skewed to the right but in relatively reasonable proportions. 
 * Some variables (e.g. *elevation*, *stand_surface*, *distance*, *trench_depth* and *sedicover_height*) have skewness and/or kurtosis values possibly high enough to have undue influence on regression coefficients. These variables will perhaps require some transformations.
@@ -214,7 +216,7 @@ From the above histograms and table, we can see that:
 ### - Correlation among variables and multicollinearity
 \
 To investigate potential correlations and collinearity among our variables, we started by computing a **correlation matrix** of the data. As most of our factors were either ordered factors (i.e. ordinal variables) or binary factors (i.e. boolean), we could use them in a correlation matrix. To do that however, computations were based on *Spearman*'s rank correlation coefficients.  
-To avoid giving too much weight to our own tarping experiments (those performed in Chalon s/ Saone with the French national railway company), we removed them from the data to compute correlations: their influence was accounted for in further analyses by the use of **mixed-effect models**.
+To avoid giving too much weight to tarping experiments made by the same operators (that could be autocorrelated), we removed them from the data to compute correlations: their influence was accounted for in further analyses (only when modelling diagnostics indicated autocorrelation) by the use of **mixed-effect models**.
 
 ```{r erad corrplot, fig.align='center', fig.cap="**Figure 2.5.** Correlation matrix displaying *Spearman*'s $\\rho$ for the numeric variables and ordered factors of the *tarping effectiveness* dataset. Only significant correlations are displayed (with $\\alpha$ = 0.05)", warning=FALSE}
 
@@ -248,14 +250,13 @@ Many interesting patterns can be observed in this correlation matrix. Among them
 * *obstacles* is positively correlated with *slope* and *coarse_env* (which are also positively correlated), as well as with *pb_durability*, and negatively with *distance*: all these correlations seem quite straightforward. 
 * Interestingly, *flood* is positively correlated with *geotex*, *tarpfix_pierced*, and *pb_fixation*.
 
-It is worth reminding that accounting for multivariate relationships, interactions and the effect of our tarping operations (dropped for the current correlation matrix) will certainly affect the observed patterns.
-Still, at this stage and in accordance with the hierarchy of hypotheses we would like to test for the *effectiveness* variables, we decided to drop the following variables: *woven_geotex*, *geotex*, and *degradations*.
+At this stage and in accordance with the hierarchy of hypotheses we would like to test for the *effectiveness* variables, we decided to drop the following variables: *woven_geotex*, *geotex*, and *degradations*.
 
 ```{r erad corrdrop}
 erad %>% dplyr::select(-geotex, -weedsp_geotex, -degradation) -> erad
 ```
 
-As multicollinearity is one of the biggest issues for inference modelling, assessing which explanatory variables and covariates are collinear and could possibly be problematic during modelling stages is important: for instance by computing *Variance Inflation Factors* (VIF) for each variable. 
+As multicollinearity is one of the biggest issues for modelling, assessing which explanatory variables and covariates are collinear and could possibly be problematic during modelling stages is important: for instance by computing *Variance Inflation Factors* (VIF) for each variable. 
 However, as only a small fraction of the variables will actually be used together in the likely *a priori* models that we will build, we intend on computing VIF as part of the models diagnostic checks and not here. Furthermore, as several variables were categorical and as we will not be working with models fitted with ordinary least squares, we will use *Generalized VIF* instead of VIF (Fox & Monette, 1992).
 \
 \
@@ -375,7 +376,7 @@ erad %>% dplyr::select(-manager_id, -xp_id, -goals, -eff_eradication, -effective
           legend.position = "right")
 ```
 
-Although most relationships look fine, we can see from these scatterplots that there is a clear case of **perfect separation** between *eradication* and *fully_tarped*! We will have to model this response variable using a penalised regression method, such as the LASSO or a Ridge regression.
+Although most relationships look fine, we can see from these scatterplots that there is a clear case of **perfect separation** between *eradication* and *fully_tarped*! We will have to model this response variable using a penalised regression method, such as LASSO or Ridge regressions.
 \
 \
    
@@ -572,9 +573,7 @@ redges <- redges[-(which.max(redges$stand_surface)),]
    
 ### - Normality
 \
-Although we already gained pretty good insights into the probability distribution followed by our variables, it is usually interesting and often useful to have a precise view of the variables' distributions.\
-Consequently, we described the shapes of the distribution of our quantitative variables using histograms as well as skewness and kurtosis values. Skewness is a measure of the symmetry of a variable's distribution (a perfectly normal distribution has a skewness of 0), while kurtosis gives information on the combined amount of probability contained in the two tails of a distribution (often reported as *excess kurtosis*, that is kurtosis - 3, since a perfectly normally distributed variable has a kurtosis of 3). There is much debate regarding what constitutes "acceptable" values for these statistics or whether this question actually makes any sense at all. Yet, various authors suggest that values of ±2 should not be too problematic for procedures requiring approximately normally distributed variables (Field, 2009; Gravetter & Wallnau, 2014). Nonetheless, many statistical methods do not possess a direct normality assumption (linear regression models, for instance and contrarily to popular beliefs, do not assume the normality of either the response variable nor of any predictor/covariate but do assume that the replicated observations of the response variable for any fixed predictor value should be normally distributed (Montgomery & Peck, 1992); an assumption that is often difficult to verify, hence the usual focus on models residuals).
-For all these reasons, here, we only used these statistics as descriptive tools to foresee potential future complications related to the distribution of our variables, but not as bases for actual decision making. 
+As explained before, we looked at skewness and kurtosis to gain better insight on our data. 
 
 ```{r redges histo, fig.align='center', fig.cap="**Figure 3.4.** Histograms for all quantitative variables of the *regrowth at the edges of the tarped area* dataset"}
 uni.histograms(dataset = redges)
@@ -595,8 +594,8 @@ From the above histograms and table, we can see that:
 ## - Multivariate relationships
 ### - Correlation among variables and multicollinearity
 \
-To investigate potential correlations and collinearity among our variables, we started by computing a **correlation matrix** of the data. As most of our factors were either ordered factors (i.e. ordinal variables) or binary factors (i.e. boolean), we could use them in a correlation matrix. To do that however, computations were based on *Spearman*'s rank correlation coefficients.  
-To avoid giving too much weight to our own tarping experiments (those performed in Chalon s/ Saone with the French national railway company), we removed them from the data to compute correlations: their influence was accounted for in further analyses by the use of **mixed-effect models**.
+To investigate potential correlations and collinearity among our variables, we started by computing a **correlation matrix** of the data. As most of our factors were either ordered factors (i.e. ordinal variables) or binary factors (i.e. boolean), we could use them in a correlation matrix. To do that however, computations were based on *Spearman*'s rank correlation coefficients. 
+To avoid giving too much weight to tarping experiments made by the same operators (that could be autocorrelated), we removed them from the data to compute correlations: their influence was accounted for in further analyses (only when modelling diagnostics indicated autocorrelation) by the use of **mixed-effect models**.
 
 ```{r redges corrplot, fig.align='center', fig.cap="**Figure 3.5.** Correlation matrix displaying *Spearman*'s $\\rho$ for the numeric variables and ordered factors of the *regrowth at the edges of the tarped area* dataset. Only significant correlations are displayed (with $\\alpha$ = 0.05)", warning=FALSE}
 
@@ -631,15 +630,13 @@ Many interesting patterns can be observed in this correlation matrix. Among them
 * *obstacles* is positively correlated with *slope* and *coarse_env* (which are also positively correlated), as well as with *pb_durability* and *reg_elsewhere*.
 * *followups* is positively correlated with *degradation* and *reg_elsewhere*.
 
-It is worth reminding that accounting for multivariate relationships, interactions and the effect of our tarping operations (dropped for the current correlation matrix) will certainly affect the observed patterns.
-Still, at this stage and in accordance with the hierarchy of hypotheses we would like to test for the *reg_edges* variable, we decided to drop the following variables: *geotex* and *degradation*.
+At this stage and in accordance with the hierarchy of hypotheses we would like to test for the *reg_edges* variable, we decided to drop the following variables: *geotex* and *degradation*.
 
 ```{r redges corrdrop}
 redges %>% dplyr::select(-geotex, -degradation) -> redges
 ```
 
-As multicollinearity is one of the biggest issues for inference modelling, assessing which explanatory variables and covariates are collinear and could possibly be problematic during modelling stages is important: for instance by computing *Variance Inflation Factors* (VIF) for each variable. 
-However, as only a small fraction of the variables will actually be used together in the likely *a priori* models that we will build, we intend on computing VIF as part of the models diagnostic checks and not here. Furthermore, as several variables were categorical and as we will not be working with models fitted with ordinary least squares, we will use *Generalized VIF* instead of VIF (Fox & Monette, 1992).
+
 \
 \
 
@@ -685,7 +682,7 @@ ggplot2::ggplot(mydata, ggplot2::aes(y = logit, x = predictor.value))+
 rm(eff2, model, probabilities, predictors, mydata)
 ```
 
-This figure shows that log-transforming *distance* and *stand_surface* could help linearize their relationship with *reg_edges* expressed on the logit scale.
+This figure shows that log-transforming *distance* and *stand_surface* could help linearise their relationship with *reg_edges* expressed on the logit scale.
 
 More general scatterplots can further be used to ensure the absence of bivariate **(quasi-)perfect separation** between a predictor and the response variable, which is highly problematic for logistic models fitted using Maximum Likelihood (Allison, 2004).
 
@@ -848,7 +845,7 @@ rm(roverlaps_mis, imput)
 \
 We performed a **normed-PCA** on some of our environmental variables for which we did not have strong direct hypotheses (i.e. *difficulty_access*, *shade*, *forest*, *ruggedness*, *granulometry*) but we kept *slope*, *obstacles*, and *flood* because we suspected they might have a major influence on the success/failure of tarping. 
 
-```{r roverlaps env PCAs, warning=FALSE, fig.align='center', fig.cap="**Figure 5.1.** Correlation plot of the normed-PCA on environmental variables for the *regrowth at strips overlap* dataset"}
+```{r roverlaps env PCAs, warning=FALSE, fig.align='center', fig.cap="**Figure 4.1.** Correlation plot of the normed-PCA on environmental variables for the *regrowth at strips overlap* dataset"}
 xxx <- dplyr::select(.data = roverlaps, c(difficulty_access, shade, forest, ruggedness, granulometry))
 
 # Normed-PCA:
@@ -869,7 +866,7 @@ As the first axis (PC) of our PCA satisfactorily synthesized a large amount (`r 
 We also performed another **normed-PCA** on some of our follow-up variables that we thought could be synthesized (i.e. *add_control*, *repairs*, and *freq_monitoring*).
 
 
-```{r roverlaps followups, warning=FALSE, fig.align='center', fig.cap="**Figure 5.1b.** Correlation plot of the normed-PCA on follow-up variables for the *tarping effectiveness* dataset"}
+```{r roverlaps followups, warning=FALSE, fig.align='center', fig.cap="**Figure 4.1b.** Correlation plot of the normed-PCA on follow-up variables for the *tarping effectiveness* dataset"}
 roverlaps %>% dplyr::select(freq_monitoring, repairs, add_control) %>%
   dplyr::mutate(repairs = as.numfactor(x = repairs),
                 add_control = as.numfactor(x = add_control))-> xxx
@@ -895,13 +892,13 @@ As the first axis (PC) of our PCA satisfactorily synthesized a large amount (`r 
 \
 The next step in our data exploration was to look for potential outliers in the data using **boxplots** and **Cleveland dotplots** on our quantitative variables. 
 
-```{r roverlaps boxplot outliers, fig.align='center', fig.cap="**Figure 5.2.** Boxplots for all quantitative variables of the *regrowth at strips overlap* dataset", warning=FALSE}
+```{r roverlaps boxplot outliers, fig.align='center', fig.cap="**Figure 4.2.** Boxplots for all quantitative variables of the *regrowth at strips overlap* dataset", warning=FALSE}
 rm(res.pca, xxx, ttt)
 
 uni.boxplots(dataset = roverlaps)
 ```
 
-```{r roverlaps dotplot, fig.align='center', fig.cap="**Figure 5.3.** Cleveland dotplots for all quantitative variables of the *regrowth at strips overlap* dataset"}
+```{r roverlaps dotplot, fig.align='center', fig.cap="**Figure 4.3.** Cleveland dotplots for all quantitative variables of the *regrowth at strips overlap* dataset"}
 uni.dotplots(dataset = roverlaps)
 ```
 
@@ -933,11 +930,9 @@ roverlaps <- roverlaps[-(which.max(roverlaps$stand_surface)),]
    
 ### - Normality
 \
-Although we already gained pretty good insights into the probability distribution followed by our variables, it is usually interesting and often useful to have a precise view of the variables' distributions.\
-Consequently, we described the shapes of the distribution of our quantitative variables using histograms as well as skewness and kurtosis values. Skewness is a measure of the symmetry of a variable's distribution (a perfectly normal distribution has a skewness of 0), while kurtosis gives information on the combined amount of probability contained in the two tails of a distribution (often reported as *excess kurtosis*, that is kurtosis - 3, since a perfectly normally distributed variable has a kurtosis of 3). There is much debate regarding what constitutes "acceptable" values for these statistics or whether this question actually makes any sense at all. Yet, various authors suggest that values of ±2 should not be too problematic for procedures requiring approximately normally distributed variables (Field, 2009; Gravetter & Wallnau, 2014). Nonetheless, many statistical methods do not possess a direct normality assumption (linear regression models, for instance and contrarily to popular beliefs, do not assume the normality of either the response variable nor of any predictor/covariate but do assume that the replicated observations of the response variable for any fixed predictor value should be normally distributed (Montgomery & Peck, 1992); an assumption that is often difficult to verify, hence the usual focus on models residuals).
-For all these reasons, here, we only used these statistics as descriptive tools to foresee potential future complications related to the distribution of our variables, but not as bases for actual decision making. 
+As explained before, we looked at skewness and kurtosis to gain better insight on our data. 
 
-```{r roverlaps histo, fig.align='center', fig.cap="**Figure 5.4.** Histograms for all quantitative variables of the *regrowth at strips overlap* dataset"}
+```{r roverlaps histo, fig.align='center', fig.cap="**Figure 4.4.** Histograms for all quantitative variables of the *regrowth at strips overlap* dataset"}
 uni.histograms(dataset = roverlaps)
 
 num.data <- roverlaps[, sapply(roverlaps, is.numeric)]
@@ -946,7 +941,7 @@ knitr::kable(x = tab, digits = 3, col.names = c("Skewness", "Excess kurtosis"))
 rm(num.data, tab)
 ```
 
-From the above histograms and table, we can see that:
+From the above histograms and table, we can see that:  
 * Very few of our sampled variables are close to approximate a normal distribution. 
 * Many variables are skewed to the right but in relatively reasonable proportions. 
 * Some variables (e.g. *elevation*, *stand_surface*, *distance*, and *sedicover_height*) have skewness and/or kurtosis values possibly high enough to have undue influence on regression coefficients. These variables will perhaps require some transformations.
@@ -957,9 +952,9 @@ From the above histograms and table, we can see that:
 ### - Correlation among variables and multicollinearity
 \
 To investigate potential correlations and collinearity among our variables, we started by computing a **correlation matrix** of the data. As most of our factors were either ordered factors (i.e. ordinal variables) or binary factors (i.e. boolean), we could use them in a correlation matrix. To do that however, computations were based on *Spearman*'s rank correlation coefficients.  
-To avoid giving too much weight to our own tarping experiments (those performed in Chalon s/ Saone with the French national railway company), we removed them from the data to compute correlations: their influence was accounted for in further analyses by the use of **mixed-effect models**.
+To avoid giving too much weight to tarping experiments made by the same operators (that could be autocorrelated), we removed them from the data to compute correlations: their influence was accounted for in further analyses (only when modelling diagnostics indicated autocorrelation) by the use of **mixed-effect models**.
 
-```{r roverlaps corrplot, fig.align='center', fig.cap="**Figure 5.5.** Correlation matrix displaying *Spearman*'s $\\rho$ for the numeric variables and ordered factors of the *regrowth at strips overlap* dataset. Only significant correlations are displayed (with $\\alpha$ = 0.05)", warning=FALSE}
+```{r roverlaps corrplot, fig.align='center', fig.cap="**Figure 4.5.** Correlation matrix displaying *Spearman*'s $\\rho$ for the numeric variables and ordered factors of the *regrowth at strips overlap* dataset. Only significant correlations are displayed (with $\\alpha$ = 0.05)", warning=FALSE}
 
 # To convert all ordered factors into numeric variables usable in a correlation matrix:
 roverlaps %>% dplyr::filter(!manager_id == 1) %>% # We remove our own experiments as they share many features that will strongly influence correlations (it should not be a problem for modelling as we will use mixed-effect models).
@@ -994,15 +989,13 @@ Many interesting patterns can be observed in this correlation matrix. Among them
 * *reg_elsewhere* is also negatively correlated with *maxveg* and *trench_depth*, all these correlations seeming quite logical. 
 * Finally, *stand_surface* seems positively correlated with *flood*, *geotex*, *plantation*, *tarpfix_pierced* and *pb_fixation*.
 
-It is worth reminding that accounting for multivariate relationships, interactions and the effect of our tarping operations (dropped for the current correlation matrix) will certainly affect the observed patterns.
-Still, at this stage and in accordance with the hierarchy of hypotheses we would like to test for the *reg_stripsoverlap* variable, we decided to drop the following variables: *geotex*, *maxveg*, *uprootexcav* and *flood*.
+At this stage and in accordance with the hierarchy of hypotheses we would like to test for the *reg_stripsoverlap* variable, we decided to drop the following variables: *geotex*, *maxveg*, *uprootexcav* and *flood*.
 
 ```{r roverlaps corrdrop}
 roverlaps %>% dplyr::select(-geotex, -maxveg, -uprootexcav, -flood) -> roverlaps
 ```
 
-As multicollinearity is one of the biggest issues for inference modelling, assessing which explanatory variables and covariates are collinear and could possibly be problematic during modelling stages is important: for instance by computing *Variance Inflation Factors* (VIF) for each variable. 
-However, as only a small fraction of the variables will actually be used together in the likely *a priori* models that we will build, we intend on computing VIF as part of the models diagnostic checks and not here. Furthermore, as several variables were categorical and as we will not be working with models fitted with ordinary least squares, we will use *Generalized VIF* instead of VIF (Fox & Monette, 1992).
+
 \
 \
 
@@ -1010,7 +1003,7 @@ However, as only a small fraction of the variables will actually be used togethe
 \
 To further study distributions and bivariate correlations, we decided to plot every numeric predictor against each others. It gives us the possibility to start investigating potential **multivariate outliers**.
 
-```{r roverlaps ggpairs, fig.align='center', fig.cap="**Figure 5.6.** Bivariate relationship among all numeric potential explanatory variables", fig.width=12, fig.height=9, message=FALSE, comment=NA, warning=FALSE}
+```{r roverlaps ggpairs, fig.align='center', fig.cap="**Figure 4.6.** Bivariate relationship among all numeric potential explanatory variables", fig.width=12, fig.height=9, message=FALSE, comment=NA, warning=FALSE}
 
 GGally::ggpairs(roverlaps[, c("coarse_env", "obstacles", "sedicover_height", "slope",
                          "stand_surface", "strips_overlap")])
@@ -1024,7 +1017,7 @@ This figure confirms that most variables are far from being normally distributed
 \
 Since *reg_stripsoverlap* will be modelled using logistic regressions, it is very important to ensure the respect of the **linearity assumption** between the outcome on the *logit scale* and each numeric predictor, for instance using Box-Tidwell tests or scatterplots. The main issue here is to get the values of the response variable on the logit scale. To do so, we have to build a logistic model incorporating all potential predictors to extract expected probabilities. A drawback from this approach is that the toy model can easily be misspecified in the process: for that reason, we actually checked this assumption iteratively for each *a priori* candidate model built for analyses (the scatterplots displayed below only serve to illustrate what transformations were actually applied to linearize relationships).
 
-```{r roverlaps linearity scatterplot, fig.align='center', fig.cap="**Figure 5.7.** Bivariate scatterplot between of the *reg_stripsoverlap* variable on the *logit scale* and each potential numeric predictor", fig.width=12, fig.height=9, message=FALSE, comment=NA, warning=FALSE}
+```{r roverlaps linearity scatterplot, fig.align='center', fig.cap="**Figure 4.7.** Bivariate scatterplot between of the *reg_stripsoverlap* variable on the *logit scale* and each potential numeric predictor", fig.width=12, fig.height=9, message=FALSE, comment=NA, warning=FALSE}
 eff2 <- roverlaps[,c("reg_stripsoverlap", "coarse_env", "obstacles", "sedicover_height", "slope", "stand_surface", "strips_overlap")]
 model <- glm(reg_stripsoverlap ~., data = eff2, family = binomial)
 # Predict the probability (p) of regrowths at strip overlaps:
@@ -1053,7 +1046,7 @@ This figure shows that log-transforming *sedicover_height*, *stand_surface* and 
 
 More general scatterplots can further be used to ensure the absence of bivariate **(quasi-)perfect separation** between a predictor and the response variable, which is highly problematic for logistic models fitted using Maximum Likelihood (Allison, 2004).
 
-```{r roverlaps bivariate plot, fig.align='center', fig.cap="**Figure 5.8.** Multivariate representation of *reg_stripsoverlap* against each potential explanatory variable", fig.width=12, fig.height=9, message=FALSE, comment=NA, warning=FALSE}
+```{r roverlaps bivariate plot, fig.align='center', fig.cap="**Figure 4.8.** Multivariate representation of *reg_stripsoverlap* against each potential explanatory variable", fig.width=12, fig.height=9, message=FALSE, comment=NA, warning=FALSE}
 ### To plot a response variable against all predictors/covariates, we will have to do use a for loop or the facet_wrap function of ggplot (or equivalent).
 # For the "reg_stripsoverlap" variable (bounded continuous variable):
 roverlaps %>% dplyr::select(-manager_id, -xp_id, -latitude, -longitude) %>%

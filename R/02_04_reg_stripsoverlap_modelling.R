@@ -8,9 +8,6 @@ source(file = here::here("R/01_03_exploration_functions.R")) # I need to source 
 ##### Data preparation for modelling 'reg_stripsoverlap' #####
 # ---------------------------------------------------------- #
 
-# List of used packages (for publication or package building): here, readr, MuMIn, lme4, ggplot2,
-# (broom.mixed), stats
-
 .pardefault <- par() # To save the default graphical parameters (in case I want to restore them).
 
 readr::read_csv(here::here("data", "roverlaps.csv"), col_names = TRUE, col_types =
@@ -1461,16 +1458,16 @@ AICc <- MuMIn::model.sel(object = Cand.mod)
 
 ### Improved formating:
 AICc.model <- as.data.frame(AICc)
-AICc.model$csweigth <- cumsum(AICc.model$weight) # Add a column containing the cumulative sum of AICc weights
-AICc.model$Model <- row.names(AICc.model) # Add a column containing the n° of each candidate model
+AICc.model$csweigth <- cumsum(AICc.model$weight) # Add a column containing the cumulative sum of AICc weights.
+AICc.model$Model <- row.names(AICc.model) # Add a column containing the n° of each candidate model.
 
 AICc.model <- merge(AICc.model, Cand.model, by="Model") # CAUTION: this merger reorder the rows of the
 # the table based on Model, and it removes the NULL model from the table (as it doesn't exist in Cand.model).
 # Consequently, the new ordering begins at 10 (10, 11, 12, ..., 20, 21, ...)!
 
-AICc.model <- merge(AICc.model, R.ajust, by="Model") # This merger adds the computed R2 (here: pseudo-R2)
+AICc.model <- merge(AICc.model, R.ajust, by="Model") # This merger adds the computed R2 (here: pseudo-R2).
 
-AICc.model <- AICc.model[order(AICc.model$delta),] # To reorder rows according to delta AICc
+AICc.model <- AICc.model[order(AICc.model$delta),] # To reorder rows according to delta AICc.
 AICc.model$Response <- "reg_stripsoverlap"
 AICc.model$Rank <- 1:nrow(AICc.model)
 AICc.model <- AICc.model[,c("Rank", "Model", "Response", "Candidate", "df", "AICc", "delta", "weight", "R2")]
@@ -1488,22 +1485,6 @@ colnames(AICc.model)[colnames(AICc.model) == 'R2'] <- 'pseudo-R2'
 readr::write_csv2(x = AICc.model, file = here::here("output", "tables", "Models_reg_stripsoverlap.csv"))
 
 
-# ### Testing if the delta AICc between the "best" model and the null model is significantly large:
-# m0.glm <- glmmTMB::glmmTMB(formula = reg_stripsoverlap~1, data = roverlaps,
-#                            family = stats::binomial(link = "logit"), REML = FALSE)
-# m1.glm <- glmmTMB::glmmTMB(formula = reg_stripsoverlap~log2(sedicover_height + 1) + levelling, data = roverlaps,
-#                            family = stats::binomial(link = "logit"), REML = FALSE)
-# aic.glm <- AIC(logLik(m0.glm))
-# aic.glm1 <- AIC(logLik(m1.glm))
-#
-# # Likelihood Ratio Test:
-# null.id <- -2 * logLik(m0.glm) + 2 * logLik(m1.glm)
-# pchisq(as.numeric(null.id), df=1, lower.tail=F)
-#
-# rm(m0.glm, m1.glm, aic.glm, aic.glm1, null.id)
-# # The Likelihood Ratio Tests is significant so we have support to consider that the delta AIC between the
-# # top-ranked model and the "null" model is large enough to consider that the former better explains our
-# # response variable than the latter!
 
 
 
@@ -1524,7 +1505,7 @@ Para.model <- data.frame(Parameters, Var, Var.Imp)
 
 ### Select the top models:
 #top.models <- MuMIn::get.models(AICc, cumsum(weight) <= 0.95) # To take those with a cumulative sum of
-# AICc weights <= 0.95
+# AICc weights <= 0.95.
 top.models <- MuMIn::get.models(AICc, cumsum(weight) <= 1) # To take them all (we chose this option because
 # it was equally interesting to highlight the explanatory variables whose "importance" was supported
 # by the data and those that were not)!
@@ -1533,14 +1514,14 @@ top.models <- MuMIn::get.models(AICc, cumsum(weight) <= 1) # To take them all (w
 ### Actual model parameters averaging:
 Parameter <- MuMIn::model.avg(top.models, revised.var=T, adjusted=T, fit=T)
 Parameter.model <- as.data.frame(cbind(MuMIn::coefTable(Parameter), stats::confint(Parameter))) # Reports
-# the conditional averaged parameters with their 95% confidence interval
+# the unconditional averaged parameters with their 95% confidence interval.
 
 ### Improved formating:
 Parameter.model$Var <- row.names(Parameter.model)
 Parameter.model <- merge(Parameter.model, Para.model, by="Var", all=TRUE)
 Imp <- as.data.frame(format(round(MuMIn::sw(Parameter), digits=2))) # Gives each predictor a
 # relative "importance" value based on the sum of the model weights of the models in which the variable
-# is included as a predictor
+# is included as a predictor.
 colnames(Imp) <- "Imp."
 Imp$Var.Imp <- row.names(Imp)
 Parameter.model <- merge(Parameter.model, Imp, by="Var.Imp", all=TRUE)

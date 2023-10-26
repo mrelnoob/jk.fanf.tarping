@@ -45,7 +45,7 @@ summary(redges)
 # ---------------------------------------- #
 
 Cand.mod <- list()
-R.ajust <- data.frame(Model=integer(0), R2=numeric(0)) # Creates an empty data.frame with 2 variables
+R.ajust <- data.frame(Model=integer(0), R2=numeric(0)) # Creates an empty data.frame with 2 variables.
 
 
 
@@ -62,7 +62,7 @@ R.ajust <- data.frame(Model=integer(0), R2=numeric(0)) # Creates an empty data.f
 # pchisq(as.numeric(null.id), df=1, lower.tail=F) # The Likelihood Ratio Test is NOT significant suggesting
 # # that the use of the random effect structure is not necessary! HOWEVER, model diagnostics for subsequent
 # # models have shown that failing to include "manager_id" as a random effect leads to model misspecification.
-# # Consequently, and as initially planned, we included a random structure within our candiate models.
+# # Consequently, and as initially planned, we included a random structure within our candidate models.
 # rm(m0.glm, m0.glmer, aic.glm, aic.glmer, null.id)
 
 
@@ -125,7 +125,7 @@ Cand.mod[[2]] <- glmmTMB::glmmTMB(formula = reg_edges~log2(distance+1) + add_con
 # performance::check_distribution(Cand.mod[[2]])
 # performance::check_autocorrelation(Cand.mod[[2]])
 # performance::check_collinearity(Cand.mod[[2]])
-# performance::check_singularity(Cand.mod[[2]]) # Singularity! Dealt with decreased tolerance for convergence
+# performance::check_singularity(Cand.mod[[2]]) # Singularity! Dealt with decreased tolerance for convergence.
 #
 # ### Assessing goodness-of-fit:
 # # Test of Pearson's Chi2 residuals:
@@ -321,7 +321,7 @@ Cand.mod[[7]] <- glmmTMB::glmmTMB(formula = reg_edges~log2(distance+1) + geomem 
 # performance::check_distribution(Cand.mod[[7]])
 # performance::check_autocorrelation(Cand.mod[[7]])
 # performance::check_collinearity(Cand.mod[[7]])
-# performance::check_singularity(Cand.mod[[7]]) # Singularity! Dealt with decreased tolerance for convergence
+# performance::check_singularity(Cand.mod[[7]]) # Singularity! Dealt with decreased tolerance for convergence.
 #
 # ### Assessing goodness-of-fit:
 # # Test of Pearson's Chi2 residuals:
@@ -438,7 +438,7 @@ Cand.mod[[10]] <- glmmTMB::glmmTMB(formula = reg_edges~distance_cent * trench_ce
 # performance::check_distribution(Cand.mod[[10]])
 # performance::check_autocorrelation(Cand.mod[[10]])
 # performance::check_collinearity(Cand.mod[[10]]) # Produces moderate correlation even though predictors are
-# # centered (and/or scaled). This is unusual but not very problematic since standard errors remain acceptable
+# # centered (and/or scaled). This is unusual but not very problematic since standard errors remain acceptable.
 # performance::check_singularity(Cand.mod[[10]])
 #
 # ### Assessing goodness-of-fit:
@@ -478,7 +478,7 @@ Cand.mod[[11]] <- glmmTMB::glmmTMB(formula = reg_edges~log2(trench_depth+1) + ad
 # performance::check_distribution(Cand.mod[[11]])
 # performance::check_autocorrelation(Cand.mod[[11]])
 # performance::check_collinearity(Cand.mod[[11]])
-# performance::check_singularity(Cand.mod[[11]]) # Singularity! Dealt with decreased tolerance for convergence
+# performance::check_singularity(Cand.mod[[11]]) # Singularity! Dealt with decreased tolerance for convergence.
 #
 # ### Assessing goodness-of-fit:
 # # Test of Pearson's Chi2 residuals:
@@ -556,7 +556,7 @@ Cand.mod[[13]] <- glmmTMB::glmmTMB(formula = reg_edges~log2(trench_depth+1) + lo
 # performance::check_distribution(Cand.mod[[13]])
 # performance::check_autocorrelation(Cand.mod[[13]])
 # performance::check_collinearity(Cand.mod[[13]])
-# performance::check_singularity(Cand.mod[[13]]) # Singularity! Dealt with decreased tolerance for convergence
+# performance::check_singularity(Cand.mod[[13]]) # Singularity! Dealt with decreased tolerance for convergence.
 #
 # ### Assessing goodness-of-fit:
 # # Test of Pearson's Chi2 residuals:
@@ -595,7 +595,7 @@ Cand.mod[[14]] <- glmmTMB::glmmTMB(formula = reg_edges~log2(stand_surface) + add
 # performance::check_distribution(Cand.mod[[14]])
 # performance::check_autocorrelation(Cand.mod[[14]])
 # performance::check_collinearity(Cand.mod[[14]])
-# performance::check_singularity(Cand.mod[[14]]) # Singularity! Dealt with decreased tolerance for convergence
+# performance::check_singularity(Cand.mod[[14]]) # Singularity! Dealt with decreased tolerance for convergence.
 #
 # ### Assessing goodness-of-fit:
 # # Test of Pearson's Chi2 residuals:
@@ -661,7 +661,7 @@ Cand.mod[[16]] <- glmmTMB::glmmTMB(formula = reg_edges~st_surface_cent * distanc
 # ### Model diagnostics:
 # # Simulation-based scaled residuals (DHARMa method):
 # simu.resid <- DHARMa::simulateResiduals(fittedModel = Cand.mod[[16]], n = 1000, plot = FALSE)
-# plot(simu.resid) # Not ok! I fitted various alternative models with various packages and not red flags
+# plot(simu.resid) # Not ok! I fitted various alternative models with various packages and no red flags
 # # appeared. Therefore, I'm not sure where the problem comes from... As all test are okay, I will leave
 # # the model as is (it won't be among the influancial models anyway so it should not bias inferences too
 # # badly).
@@ -754,7 +754,7 @@ Cand.mod[[18]] <- glmmTMB::glmmTMB(formula = reg_edges~log2(trench_depth+1) + re
 # performance::check_distribution(Cand.mod[[18]])
 # performance::check_autocorrelation(Cand.mod[[18]])
 # performance::check_collinearity(Cand.mod[[18]])
-# performance::check_singularity(Cand.mod[[18]]) # Singularity! Dealt with decreased tolerance for convergence
+# performance::check_singularity(Cand.mod[[18]]) # Singularity! Dealt with decreased tolerance for convergence.
 #
 # ### Assessing goodness-of-fit:
 # # Test of Pearson's Chi2 residuals:
@@ -793,7 +793,7 @@ Cand.mod[[19]] <- glmmTMB::glmmTMB(formula = reg_edges~log2(trench_depth+1) + sl
 # performance::check_distribution(Cand.mod[[19]])
 # performance::check_autocorrelation(Cand.mod[[19]])
 # performance::check_collinearity(Cand.mod[[19]])
-# performance::check_singularity(Cand.mod[[19]]) # Singularity! Dealt with decreased tolerance for convergence
+# performance::check_singularity(Cand.mod[[19]]) # Singularity! Dealt with decreased tolerance for convergence.
 #
 # ### Assessing goodness-of-fit:
 # # Test of Pearson's Chi2 residuals:
@@ -871,7 +871,7 @@ Cand.mod[[21]] <- glmmTMB::glmmTMB(formula = reg_edges~add_control + pb_fixation
 # performance::check_distribution(Cand.mod[[21]])
 # performance::check_autocorrelation(Cand.mod[[21]])
 # performance::check_collinearity(Cand.mod[[21]])
-# performance::check_singularity(Cand.mod[[21]]) # Singularity! Dealt by decreased tolerance for convergence
+# performance::check_singularity(Cand.mod[[21]]) # Singularity! Dealt by decreased tolerance for convergence.
 #
 # ### Assessing goodness-of-fit:
 # # Test of Pearson's Chi2 residuals:
@@ -910,7 +910,7 @@ Cand.mod[[22]] <- glmmTMB::glmmTMB(formula = reg_edges~add_control + slope + (1|
 # performance::check_distribution(Cand.mod[[22]])
 # performance::check_autocorrelation(Cand.mod[[22]])
 # performance::check_collinearity(Cand.mod[[22]])
-# performance::check_singularity(Cand.mod[[22]]) # Singularity! Dealt with decreased tolerance for convergence
+# performance::check_singularity(Cand.mod[[22]]) # Singularity! Dealt with decreased tolerance for convergence.
 #
 # ### Assessing goodness-of-fit:
 # # Test of Pearson's Chi2 residuals:
@@ -949,7 +949,7 @@ Cand.mod[[23]] <- glmmTMB::glmmTMB(formula = reg_edges~add_control + tarping_dur
 # performance::check_distribution(Cand.mod[[23]])
 # performance::check_autocorrelation(Cand.mod[[23]])
 # performance::check_collinearity(Cand.mod[[23]])
-# performance::check_singularity(Cand.mod[[23]]) # Singularity! Dealt with decreased tolerance for convergence
+# performance::check_singularity(Cand.mod[[23]]) # Singularity! Dealt with decreased tolerance for convergence.
 #
 # ### Assessing goodness-of-fit:
 # # Test of Pearson's Chi2 residuals:
@@ -1027,7 +1027,7 @@ Cand.mod[[25]] <- glmmTMB::glmmTMB(formula = reg_edges~obstacles + geomem + (1|m
 # performance::check_distribution(Cand.mod[[25]])
 # performance::check_autocorrelation(Cand.mod[[25]])
 # performance::check_collinearity(Cand.mod[[25]])
-# performance::check_singularity(Cand.mod[[25]]) # Singularity! Dealt with decreased tolerance for convergence
+# performance::check_singularity(Cand.mod[[25]]) # Singularity! Dealt with decreased tolerance for convergence.
 #
 # ### Assessing goodness-of-fit:
 # # Test of Pearson's Chi2 residuals:
@@ -1105,7 +1105,7 @@ Cand.mod[[27]] <- glmmTMB::glmmTMB(formula = reg_edges~slope + geomem + (1|manag
 # performance::check_distribution(Cand.mod[[27]])
 # performance::check_autocorrelation(Cand.mod[[27]])
 # performance::check_collinearity(Cand.mod[[27]])
-# performance::check_singularity(Cand.mod[[27]]) # Singularity! Dealt with decreased tolerance for convergence
+# performance::check_singularity(Cand.mod[[27]]) # Singularity! Dealt with decreased tolerance for convergence.
 #
 # ### Assessing goodness-of-fit:
 # # Test of Pearson's Chi2 residuals:
@@ -1224,7 +1224,7 @@ Cand.mod[[30]] <- glmmTMB::glmmTMB(formula = reg_edges~log2(distance+1) + log2(t
 # performance::check_distribution(Cand.mod[[30]])
 # performance::check_autocorrelation(Cand.mod[[30]])
 # performance::check_collinearity(Cand.mod[[30]])
-# performance::check_singularity(Cand.mod[[30]]) # Singularity! Dealt with decreased tolerance for convergence
+# performance::check_singularity(Cand.mod[[30]]) # Singularity! Dealt with decreased tolerance for convergence.
 #
 # ### Assessing goodness-of-fit:
 # # Test of Pearson's Chi2 residuals:
@@ -1306,7 +1306,7 @@ Cand.mod[[32]] <- glmmTMB::glmmTMB(formula = reg_edges~log2(distance+1) + log2(t
 # performance::check_distribution(Cand.mod[[32]])
 # performance::check_autocorrelation(Cand.mod[[32]])
 # performance::check_collinearity(Cand.mod[[32]])
-# performance::check_singularity(Cand.mod[[32]]) # Singularity! Dealt with decreased tolerance for convergence
+# performance::check_singularity(Cand.mod[[32]]) # Singularity! Dealt with decreased tolerance for convergence.
 #
 # ### Assessing goodness-of-fit:
 # # Test of Pearson's Chi2 residuals:
@@ -1428,7 +1428,7 @@ Cand.mod[[35]] <- glmmTMB::glmmTMB(formula = reg_edges~log2(distance+1) + log2(s
 # performance::check_distribution(Cand.mod[[35]])
 # performance::check_autocorrelation(Cand.mod[[35]])
 # performance::check_collinearity(Cand.mod[[35]])
-# performance::check_singularity(Cand.mod[[35]]) # Singularity! Dealt with decreased tolerance for convergence
+# performance::check_singularity(Cand.mod[[35]]) # Singularity! Dealt with decreased tolerance for convergence.
 #
 # ### Assessing goodness-of-fit:
 # # Test of Pearson's Chi2 residuals:
@@ -1551,7 +1551,7 @@ Cand.mod[[38]] <- glmmTMB::glmmTMB(formula = reg_edges~log2(distance+1) + geomem
 # performance::check_distribution(Cand.mod[[38]])
 # performance::check_autocorrelation(Cand.mod[[38]])
 # performance::check_collinearity(Cand.mod[[38]])
-# performance::check_singularity(Cand.mod[[38]]) # Singularity! Dealt with decreased tolerance for convergence
+# performance::check_singularity(Cand.mod[[38]]) # Singularity! Dealt with decreased tolerance for convergence.
 #
 # ### Assessing goodness-of-fit:
 # # Test of Pearson's Chi2 residuals:
@@ -2102,16 +2102,16 @@ AICc <- MuMIn::model.sel(object = Cand.mod)
 
 ### Improved formating:
 AICc.model <- as.data.frame(AICc)
-AICc.model$csweigth <- cumsum(AICc.model$weight) # Add a column containing the cumulative sum of AICc weights
-AICc.model$Model <- row.names(AICc.model) # Add a column containing the n° of each candidate model
+AICc.model$csweigth <- cumsum(AICc.model$weight) # Add a column containing the cumulative sum of AICc weights.
+AICc.model$Model <- row.names(AICc.model) # Add a column containing the n° of each candidate model.
 
 AICc.model <- merge(AICc.model, Cand.model, by="Model") # CAUTION: this merger reorder the rows of the
 # the table based on Model, and it removes the NULL model from the table (as it doesn't exist in Cand.model).
 # Consequently, the new ordering begins at 10 (10, 11, 12, ..., 20, 21, ...)!
 
-AICc.model <- merge(AICc.model, R.ajust, by="Model") # This merger adds the computed R2 (here: pseudo-R2)
+AICc.model <- merge(AICc.model, R.ajust, by="Model") # This merger adds the computed R2 (here: pseudo-R2).
 
-AICc.model <- AICc.model[order(AICc.model$delta),] # To reorder rows according to delta AICc
+AICc.model <- AICc.model[order(AICc.model$delta),] # To reorder rows according to delta AICc.
 AICc.model$Response <- "reg_edges"
 AICc.model$Rank <- 1:nrow(AICc.model)
 AICc.model <- AICc.model[,c("Rank", "Model", "Response", "Candidate", "df", "AICc", "delta", "weight", "R2")]
@@ -2158,14 +2158,14 @@ top.models <- MuMIn::get.models(AICc.2, cumsum(weight) <= 1) # To take them all 
 ### Actual model parameters averaging:
 Parameter <- MuMIn::model.avg(top.models, revised.var=T, adjusted=T, fit=T)
 Parameter.model <- as.data.frame(cbind(MuMIn::coefTable(Parameter), stats::confint(Parameter))) # Reports
-# the conditional averaged parameters with their 95% confidence interval
+# the unconditional averaged parameters with their 95% confidence interval
 
 ### Improved formating:
 Parameter.model$Var <- row.names(Parameter.model)
 Parameter.model <- merge(Parameter.model, Para.model, by="Var", all=TRUE)
 Imp <- as.data.frame(format(round(MuMIn::sw(Parameter), digits=2))) # Gives each predictor a
 # relative "importance" value based on the sum of the model weights of the models in which the variable
-# is included as a predictor
+# is included as a predictor.
 colnames(Imp) <- "Imp."
 Imp$Var.Imp <- row.names(Imp)
 Parameter.model <- merge(Parameter.model, Imp, by="Var.Imp", all=TRUE)

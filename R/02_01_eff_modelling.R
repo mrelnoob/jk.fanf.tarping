@@ -32,7 +32,7 @@ readr::read_csv(here::here("data", "erad.csv"), col_names = TRUE, col_types =
                     add_control = readr::col_factor(c("0", "1")),
                     pb_fixation = readr::col_factor(c("0", "1")),
                     pb_durability = readr::col_factor(c("0", "1")))) %>%
-  dplyr::mutate(effectiveness = effectiveness/10) %>% # For 'effectiveness' to be look like a percentage that could
+  dplyr::mutate(effectiveness = effectiveness/10) %>% # For 'effectiveness' to be a proportion that could
   # be modelled using a Beta Regression Model.
   dplyr::mutate(effectiveness = ifelse(effectiveness == 1, 0.999, effectiveness)) %>%
   dplyr::mutate(distance_cent = scale(log2(distance+1), center = TRUE, scale = FALSE)) %>%
@@ -118,7 +118,7 @@ Cand.mod[[1]] <- glmmTMB::glmmTMB(formula = effectiveness~1, data = eff,
 # summary(Cand.mod[[1]])
 #
 # ### Computing a quasiR^2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[1]], ~1))[1] - logLik(Cand.mod[[1]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[1]], ~1))[1] - logLik(Cand.mod[[1]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=1, R2=R2[1]))
 
 
@@ -160,7 +160,7 @@ Cand.mod[[2]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + fol
 # family(Cand.mod[[2]])$linkinv(glmmTMB::fixef(Cand.mod[[2]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[2]], ~1))[1] - logLik(Cand.mod[[2]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[2]], ~1))[1] - logLik(Cand.mod[[2]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=2, R2=R2[1]))
 
 
@@ -202,7 +202,7 @@ Cand.mod[[3]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + ful
 # family(Cand.mod[[3]])$linkinv(glmmTMB::fixef(Cand.mod[[3]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[3]], ~1))[1] - logLik(Cand.mod[[3]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[3]], ~1))[1] - logLik(Cand.mod[[3]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=3, R2=R2[1]))
 
 
@@ -243,7 +243,7 @@ Cand.mod[[4]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + obs
 # family(Cand.mod[[4]])$linkinv(glmmTMB::fixef(Cand.mod[[4]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[4]], ~1))[1] - logLik(Cand.mod[[4]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[4]], ~1))[1] - logLik(Cand.mod[[4]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=4, R2=R2[1]))
 
 
@@ -284,7 +284,7 @@ Cand.mod[[5]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + log
 # family(Cand.mod[[5]])$linkinv(glmmTMB::fixef(Cand.mod[[5]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[5]], ~1))[1] - logLik(Cand.mod[[5]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[5]], ~1))[1] - logLik(Cand.mod[[5]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=5, R2=R2[1]))
 
 
@@ -325,7 +325,7 @@ Cand.mod[[6]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + log
 # family(Cand.mod[[6]])$linkinv(glmmTMB::fixef(Cand.mod[[6]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[6]], ~1))[1] - logLik(Cand.mod[[6]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[6]], ~1))[1] - logLik(Cand.mod[[6]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=6, R2=R2[1]))
 
 
@@ -366,7 +366,7 @@ Cand.mod[[7]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + upr
 # family(Cand.mod[[7]])$linkinv(glmmTMB::fixef(Cand.mod[[7]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[7]], ~1))[1] - logLik(Cand.mod[[7]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[7]], ~1))[1] - logLik(Cand.mod[[7]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=7, R2=R2[1]))
 
 
@@ -407,7 +407,7 @@ Cand.mod[[8]] <- glmmTMB::glmmTMB(formula = effectiveness~followups + fully_tarp
 # family(Cand.mod[[8]])$linkinv(glmmTMB::fixef(Cand.mod[[8]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[8]], ~1))[1] - logLik(Cand.mod[[8]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[8]], ~1))[1] - logLik(Cand.mod[[8]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=8, R2=R2[1]))
 
 
@@ -448,7 +448,7 @@ Cand.mod[[9]] <- glmmTMB::glmmTMB(formula = effectiveness~followups + pb_fixatio
 # family(Cand.mod[[9]])$linkinv(glmmTMB::fixef(Cand.mod[[9]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[9]], ~1))[1] - logLik(Cand.mod[[9]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[9]], ~1))[1] - logLik(Cand.mod[[9]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=9, R2=R2[1]))
 
 
@@ -489,7 +489,7 @@ Cand.mod[[10]] <- glmmTMB::glmmTMB(formula = effectiveness~followups + obstacles
 # family(Cand.mod[[10]])$linkinv(glmmTMB::fixef(Cand.mod[[10]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[10]], ~1))[1] - logLik(Cand.mod[[10]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[10]], ~1))[1] - logLik(Cand.mod[[10]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=10, R2=R2[1]))
 
 
@@ -530,7 +530,7 @@ Cand.mod[[11]] <- glmmTMB::glmmTMB(formula = effectiveness~followups + log2(stan
 # family(Cand.mod[[11]])$linkinv(glmmTMB::fixef(Cand.mod[[11]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[11]], ~1))[1] - logLik(Cand.mod[[11]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[11]], ~1))[1] - logLik(Cand.mod[[11]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=11, R2=R2[1]))
 
 
@@ -571,7 +571,7 @@ Cand.mod[[12]] <- glmmTMB::glmmTMB(formula = effectiveness~followups + log2(tarp
 # family(Cand.mod[[12]])$linkinv(glmmTMB::fixef(Cand.mod[[12]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[12]], ~1))[1] - logLik(Cand.mod[[12]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[12]], ~1))[1] - logLik(Cand.mod[[12]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=12, R2=R2[1]))
 
 
@@ -612,7 +612,7 @@ Cand.mod[[13]] <- glmmTMB::glmmTMB(formula = effectiveness~followups_cent * pb_f
 # family(Cand.mod[[13]])$linkinv(glmmTMB::fixef(Cand.mod[[13]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[13]], ~1))[1] - logLik(Cand.mod[[13]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[13]], ~1))[1] - logLik(Cand.mod[[13]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=13, R2=R2[1]))
 
 
@@ -653,7 +653,7 @@ Cand.mod[[14]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + planta
 # family(Cand.mod[[14]])$linkinv(glmmTMB::fixef(Cand.mod[[14]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[14]], ~1))[1] - logLik(Cand.mod[[14]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[14]], ~1))[1] - logLik(Cand.mod[[14]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=14, R2=R2[1]))
 
 
@@ -694,7 +694,7 @@ Cand.mod[[15]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(s
 # family(Cand.mod[[15]])$linkinv(glmmTMB::fixef(Cand.mod[[15]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[15]], ~1))[1] - logLik(Cand.mod[[15]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[15]], ~1))[1] - logLik(Cand.mod[[15]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=15, R2=R2[1]))
 
 
@@ -735,7 +735,7 @@ Cand.mod[[16]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(s
 # family(Cand.mod[[16]])$linkinv(glmmTMB::fixef(Cand.mod[[16]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[16]], ~1))[1] - logLik(Cand.mod[[16]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[16]], ~1))[1] - logLik(Cand.mod[[16]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=16, R2=R2[1]))
 
 
@@ -776,7 +776,7 @@ Cand.mod[[17]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + obstac
 # family(Cand.mod[[17]])$linkinv(glmmTMB::fixef(Cand.mod[[17]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[17]], ~1))[1] - logLik(Cand.mod[[17]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[17]], ~1))[1] - logLik(Cand.mod[[17]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=17, R2=R2[1]))
 
 
@@ -817,7 +817,7 @@ Cand.mod[[18]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(t
 # family(Cand.mod[[18]])$linkinv(glmmTMB::fixef(Cand.mod[[18]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[18]], ~1))[1] - logLik(Cand.mod[[18]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[18]], ~1))[1] - logLik(Cand.mod[[18]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=18, R2=R2[1]))
 
 
@@ -858,7 +858,7 @@ Cand.mod[[19]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(stand_surface) +
 # family(Cand.mod[[19]])$linkinv(glmmTMB::fixef(Cand.mod[[19]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[19]], ~1))[1] - logLik(Cand.mod[[19]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[19]], ~1))[1] - logLik(Cand.mod[[19]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=19, R2=R2[1]))
 
 
@@ -899,7 +899,7 @@ Cand.mod[[20]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(stand_surface) +
 # family(Cand.mod[[20]])$linkinv(glmmTMB::fixef(Cand.mod[[20]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[20]], ~1))[1] - logLik(Cand.mod[[20]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[20]], ~1))[1] - logLik(Cand.mod[[20]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=20, R2=R2[1]))
 
 
@@ -940,7 +940,7 @@ Cand.mod[[21]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(stand_surface) +
 # family(Cand.mod[[21]])$linkinv(glmmTMB::fixef(Cand.mod[[21]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[21]], ~1))[1] - logLik(Cand.mod[[21]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[21]], ~1))[1] - logLik(Cand.mod[[21]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=21, R2=R2[1]))
 
 
@@ -981,7 +981,7 @@ Cand.mod[[22]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(stand_surface) +
 # family(Cand.mod[[22]])$linkinv(glmmTMB::fixef(Cand.mod[[22]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[22]], ~1))[1] - logLik(Cand.mod[[22]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[22]], ~1))[1] - logLik(Cand.mod[[22]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=22, R2=R2[1]))
 
 
@@ -1022,7 +1022,7 @@ Cand.mod[[23]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(stand_surface) +
 # family(Cand.mod[[23]])$linkinv(glmmTMB::fixef(Cand.mod[[23]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[23]], ~1))[1] - logLik(Cand.mod[[23]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[23]], ~1))[1] - logLik(Cand.mod[[23]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=23, R2=R2[1]))
 
 
@@ -1063,7 +1063,7 @@ Cand.mod[[24]] <- glmmTMB::glmmTMB(formula = effectiveness~slope + plantation, d
 # family(Cand.mod[[24]])$linkinv(glmmTMB::fixef(Cand.mod[[24]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[24]], ~1))[1] - logLik(Cand.mod[[24]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[24]], ~1))[1] - logLik(Cand.mod[[24]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=24, R2=R2[1]))
 
 
@@ -1104,7 +1104,7 @@ Cand.mod[[25]] <- glmmTMB::glmmTMB(formula = effectiveness~uprootexcav + geomem,
 # family(Cand.mod[[25]])$linkinv(glmmTMB::fixef(Cand.mod[[25]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[25]], ~1))[1] - logLik(Cand.mod[[25]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[25]], ~1))[1] - logLik(Cand.mod[[25]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=25, R2=R2[1]))
 
 
@@ -1145,7 +1145,7 @@ Cand.mod[[26]] <- glmmTMB::glmmTMB(formula = effectiveness~uprootexcav + plantat
 # family(Cand.mod[[26]])$linkinv(glmmTMB::fixef(Cand.mod[[26]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[26]], ~1))[1] - logLik(Cand.mod[[26]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[26]], ~1))[1] - logLik(Cand.mod[[26]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=26, R2=R2[1]))
 
 
@@ -1186,7 +1186,7 @@ Cand.mod[[27]] <- glmmTMB::glmmTMB(formula = effectiveness~obstacles + slope, da
 # family(Cand.mod[[27]])$linkinv(glmmTMB::fixef(Cand.mod[[27]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[27]], ~1))[1] - logLik(Cand.mod[[27]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[27]], ~1))[1] - logLik(Cand.mod[[27]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=27, R2=R2[1]))
 
 
@@ -1227,7 +1227,7 @@ Cand.mod[[28]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped * st_sur
 # family(Cand.mod[[28]])$linkinv(glmmTMB::fixef(Cand.mod[[28]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[28]], ~1))[1] - logLik(Cand.mod[[28]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[28]], ~1))[1] - logLik(Cand.mod[[28]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=28, R2=R2[1]))
 
 
@@ -1268,7 +1268,7 @@ Cand.mod[[29]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + fu
 # family(Cand.mod[[29]])$linkinv(glmmTMB::fixef(Cand.mod[[29]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[29]], ~1))[1] - logLik(Cand.mod[[29]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[29]], ~1))[1] - logLik(Cand.mod[[29]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=29, R2=R2[1]))
 
 
@@ -1309,7 +1309,7 @@ Cand.mod[[30]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + fu
 # family(Cand.mod[[30]])$linkinv(glmmTMB::fixef(Cand.mod[[30]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[30]], ~1))[1] - logLik(Cand.mod[[30]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[30]], ~1))[1] - logLik(Cand.mod[[30]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=30, R2=R2[1]))
 
 
@@ -1350,7 +1350,7 @@ Cand.mod[[31]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + fu
 # family(Cand.mod[[31]])$linkinv(glmmTMB::fixef(Cand.mod[[31]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[31]], ~1))[1] - logLik(Cand.mod[[31]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[31]], ~1))[1] - logLik(Cand.mod[[31]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=31, R2=R2[1]))
 
 
@@ -1391,7 +1391,7 @@ Cand.mod[[32]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + fu
 # family(Cand.mod[[32]])$linkinv(glmmTMB::fixef(Cand.mod[[32]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[32]], ~1))[1] - logLik(Cand.mod[[32]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[32]], ~1))[1] - logLik(Cand.mod[[32]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=32, R2=R2[1]))
 
 
@@ -1432,7 +1432,7 @@ Cand.mod[[33]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + fu
 # family(Cand.mod[[33]])$linkinv(glmmTMB::fixef(Cand.mod[[33]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[33]], ~1))[1] - logLik(Cand.mod[[33]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[33]], ~1))[1] - logLik(Cand.mod[[33]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=33, R2=R2[1]))
 
 
@@ -1473,7 +1473,7 @@ Cand.mod[[34]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + fu
 # family(Cand.mod[[34]])$linkinv(glmmTMB::fixef(Cand.mod[[34]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[34]], ~1))[1] - logLik(Cand.mod[[34]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[34]], ~1))[1] - logLik(Cand.mod[[34]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=34, R2=R2[1]))
 
 
@@ -1514,7 +1514,7 @@ Cand.mod[[35]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + fu
 # family(Cand.mod[[35]])$linkinv(glmmTMB::fixef(Cand.mod[[35]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[35]], ~1))[1] - logLik(Cand.mod[[35]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[35]], ~1))[1] - logLik(Cand.mod[[35]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=35, R2=R2[1]))
 
 
@@ -1555,7 +1555,7 @@ Cand.mod[[36]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + fu
 # family(Cand.mod[[36]])$linkinv(glmmTMB::fixef(Cand.mod[[36]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[36]], ~1))[1] - logLik(Cand.mod[[36]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[36]], ~1))[1] - logLik(Cand.mod[[36]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=36, R2=R2[1]))
 
 
@@ -1596,7 +1596,7 @@ Cand.mod[[37]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + lo
 # family(Cand.mod[[37]])$linkinv(glmmTMB::fixef(Cand.mod[[37]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[37]], ~1))[1] - logLik(Cand.mod[[37]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[37]], ~1))[1] - logLik(Cand.mod[[37]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=37, R2=R2[1]))
 
 
@@ -1637,7 +1637,7 @@ Cand.mod[[38]] <- glmmTMB::glmmTMB(formula = effectiveness~log2(distance+1) + lo
 # family(Cand.mod[[38]])$linkinv(glmmTMB::fixef(Cand.mod[[38]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[38]], ~1))[1] - logLik(Cand.mod[[38]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[38]], ~1))[1] - logLik(Cand.mod[[38]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=38, R2=R2[1]))
 
 
@@ -1678,7 +1678,7 @@ Cand.mod[[39]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + pb_fix
 # family(Cand.mod[[39]])$linkinv(glmmTMB::fixef(Cand.mod[[39]])$cond) # To get interpretable coefficients.)
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[39]], ~1))[1] - logLik(Cand.mod[[39]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[39]], ~1))[1] - logLik(Cand.mod[[39]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=39, R2=R2[1]))
 
 
@@ -1719,7 +1719,7 @@ Cand.mod[[40]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(s
 # family(Cand.mod[[40]])$linkinv(glmmTMB::fixef(Cand.mod[[40]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[40]], ~1))[1] - logLik(Cand.mod[[40]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[40]], ~1))[1] - logLik(Cand.mod[[40]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=40, R2=R2[1]))
 
 
@@ -1760,7 +1760,7 @@ Cand.mod[[41]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(s
 # family(Cand.mod[[41]])$linkinv(glmmTMB::fixef(Cand.mod[[41]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[41]], ~1))[1] - logLik(Cand.mod[[41]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[41]], ~1))[1] - logLik(Cand.mod[[41]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=41, R2=R2[1]))
 
 
@@ -1801,7 +1801,7 @@ Cand.mod[[42]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(s
 # family(Cand.mod[[42]])$linkinv(glmmTMB::fixef(Cand.mod[[42]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[42]], ~1))[1] - logLik(Cand.mod[[42]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[42]], ~1))[1] - logLik(Cand.mod[[42]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=42, R2=R2[1]))
 
 
@@ -1842,7 +1842,7 @@ Cand.mod[[43]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(s
 # family(Cand.mod[[43]])$linkinv(glmmTMB::fixef(Cand.mod[[43]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[43]], ~1))[1] - logLik(Cand.mod[[43]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[43]], ~1))[1] - logLik(Cand.mod[[43]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=43, R2=R2[1]))
 
 
@@ -1883,7 +1883,7 @@ Cand.mod[[44]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(s
 # family(Cand.mod[[44]])$linkinv(glmmTMB::fixef(Cand.mod[[44]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[44]], ~1))[1] - logLik(Cand.mod[[44]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[44]], ~1))[1] - logLik(Cand.mod[[44]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=44, R2=R2[1]))
 
 
@@ -1924,7 +1924,7 @@ Cand.mod[[45]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + log2(s
 # family(Cand.mod[[45]])$linkinv(glmmTMB::fixef(Cand.mod[[45]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[45]], ~1))[1] - logLik(Cand.mod[[45]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[45]], ~1))[1] - logLik(Cand.mod[[45]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=45, R2=R2[1]))
 
 
@@ -1965,7 +1965,7 @@ Cand.mod[[46]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + follow
 # family(Cand.mod[[46]])$linkinv(glmmTMB::fixef(Cand.mod[[46]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[46]], ~1))[1] - logLik(Cand.mod[[46]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[46]], ~1))[1] - logLik(Cand.mod[[46]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=46, R2=R2[1]))
 
 
@@ -2006,7 +2006,7 @@ Cand.mod[[47]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + obstac
 # family(Cand.mod[[47]])$linkinv(glmmTMB::fixef(Cand.mod[[47]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[47]], ~1))[1] - logLik(Cand.mod[[47]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[47]], ~1))[1] - logLik(Cand.mod[[47]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=47, R2=R2[1]))
 
 
@@ -2047,7 +2047,7 @@ Cand.mod[[48]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + obstac
 # family(Cand.mod[[48]])$linkinv(glmmTMB::fixef(Cand.mod[[48]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[48]], ~1))[1] - logLik(Cand.mod[[48]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[48]], ~1))[1] - logLik(Cand.mod[[48]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=48, R2=R2[1]))
 
 
@@ -2088,7 +2088,7 @@ Cand.mod[[49]] <- glmmTMB::glmmTMB(formula = effectiveness~fully_tarped + obstac
 # family(Cand.mod[[49]])$linkinv(glmmTMB::fixef(Cand.mod[[49]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[49]], ~1))[1] - logLik(Cand.mod[[49]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[49]], ~1))[1] - logLik(Cand.mod[[49]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=49, R2=R2[1]))
 
 
@@ -2129,7 +2129,7 @@ Cand.mod[[50]] <- glmmTMB::glmmTMB(formula = effectiveness~distance_cent * st_su
 # family(Cand.mod[[50]])$linkinv(glmmTMB::fixef(Cand.mod[[50]])$cond) # To get interpretable coefficients.
 
 ### Computing a Pseudo-R2:
-R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[50]], ~1))[1] - logLik(Cand.mod[[50]])[1])) # Methods from flutterbys.com
+R2 <- 1 - exp((2/nrow(eff)) * (logLik(update(Cand.mod[[50]], ~1))[1] - logLik(Cand.mod[[50]])[1]))
 R.ajust <- rbind(R.ajust, data.frame(Model=50, R2=R2[1]))
 
 
@@ -2148,43 +2148,42 @@ Candidate <- c("null",
                "followups + fully_tarped", "followups + pb_fixation", "followups + obstacles",
                "followups + log2(stand_surface)", "followups + tarping_duration", "followups * pb_fixation",
                "fully_tarped + plantation",
-               "fully_tarped + log2(sedicover_height + 1)", # Ok n°15
+               "fully_tarped + log2(sedicover_height + 1)",
                "fully_tarped + log2(stand_surface)",
                "fully_tarped + obstacles",
                "fully_tarped + tarping_duration",
                "log2(stand_surface) + geomem",
-               "log2(stand_surface) + obstacles", # Ok n°20
+               "log2(stand_surface) + obstacles",
                "log2(stand_surface) + plantation",
                "log2(stand_surface) + slope",
                "log2(stand_surface) + tarping_duration",
                "slope + plantation",
-               "uprootexcav + geomem", # Ok n°25
+               "uprootexcav + geomem",
                "uprootexcav + plantation",
                "obstacles + slope",
                "followups * plantation",
                "log2(distance + 1) + fully_tarped + followups",
-               "log2(distance + 1) + fully_tarped + geomem", # Ok n°30
+               "log2(distance + 1) + fully_tarped + geomem",
                "log2(distance + 1) + fully_tarped + obstacles",
                "log2(distance + 1) + fully_tarped + plantation",
                "log2(distance + 1) + fully_tarped + slope",
                "log2(distance + 1) + fully_tarped + log2(sedicover_height + 1)",
-               "log2(distance + 1) + fully_tarped + log2(stand_surface)", # Ok n°35
+               "log2(distance + 1) + fully_tarped + log2(stand_surface)",
                "log2(distance + 1) + fully_tarped + tarping_duration",
                "log2(distance + 1) + log2(stand_surface) + obstacles",
                "log2(distance + 1) + log2(stand_surface) + pb_fixation",
                "fully_tarped + pb_fixation + followups",
-               "fully_tarped + log2(stand_surface) + geomem",  # Ok n°40
+               "fully_tarped + log2(stand_surface) + geomem",
                "fully_tarped + log2(stand_surface) + pb_fixation",
                "fully_tarped + log2(stand_surface) + log2(sedicover_height + 1)",
                "fully_tarped + log2(stand_surface) + slope",
                "fully_tarped + log2(stand_surface) + uprootexcav",
-               "fully_tarped + log2(stand_surface) + tarping_duration", # Ok n°45
+               "fully_tarped + log2(stand_surface) + tarping_duration",
                "fully_tarped + followups + obstacles",
                "fully_tarped + obstacles + pb_fixation",
                "fully_tarped + obstacles + slope",
                "fully_tarped + obstacles + uprootexcav",
-               "log2(distance + 1) * log2(stand_surface)") # Ok n°50
-
+               "log2(distance + 1) * log2(stand_surface)")
 Cand.model <- data.frame(Model, Candidate)
 
 
@@ -2201,12 +2200,12 @@ AICc.model$csweigth <- cumsum(AICc.model$weight) # Add a column containing the c
 AICc.model$Model <- row.names(AICc.model) # Add a column containing the n° of each candidate model
 
 AICc.model <- merge(AICc.model, Cand.model, by="Model") # CAUTION: this merger reorder the rows of the
-# the table based on Model, and it removes the NULL model from the table (as it doesn't exist in Cand.model).
+# the table based on 'Model', and it removes the NULL model from the table (as it doesn't exist in Cand.model).
 # Consequently, the new ordering begins at 10 (10, 11, 12, ..., 20, 21, ...)!
 
-AICc.model <- merge(AICc.model, R.ajust, by="Model") # This merger adds the computed R2 (here: pseudo-R2)
+AICc.model <- merge(AICc.model, R.ajust, by="Model") # This merger adds the computed R2 (here: pseudo-R2).
 
-AICc.model <- AICc.model[order(AICc.model$delta),] # To reorder rows according to delta AICc
+AICc.model <- AICc.model[order(AICc.model$delta),] # To reorder rows according to delta AICc.
 AICc.model$Response <- "effectiveness"
 AICc.model$Rank <- 1:nrow(AICc.model)
 AICc.model <- AICc.model[,c("Rank", "Model", "Response", "Candidate", "df", "AICc", "delta", "weight", "R2")]
@@ -2242,12 +2241,12 @@ Para.model <- data.frame(Parameters, Var, Var.Imp)
 
 ### Removing the models with interactions from the top-models:
 AICc[-c(32,35,48),] -> AICc # Removing the 3 lines containing the 3 interaction models. I need to
-# remove them to avoid biaising the coefficients as they, by definition, have coefficient that do not
+# remove them to avoid biasing the coefficients as they, by definition, have coefficient that do not
 # mean the same thing as for the other models.
 
 ### Select the top models:
 #top.models <- MuMIn::get.models(AICc, cumsum(weight) <= 0.95) # To take those with a cumulative sum of
-# AICc weights <= 0.95
+# AICc weights <= 0.95.
 top.models <- MuMIn::get.models(AICc, cumsum(weight) <= 1) # To take them all (we chose this option because
 # it was equally interesting to highlight the explanatory variables whose "importance" was supported
 # by the data and those that were not)!
@@ -2256,7 +2255,7 @@ top.models <- MuMIn::get.models(AICc, cumsum(weight) <= 1) # To take them all (w
 ### Actual model parameters averaging:
 Parameter <- MuMIn::model.avg(top.models, revised.var=T, adjusted=T, fit=T)
 Parameter.model <- as.data.frame(cbind(MuMIn::coefTable(Parameter), stats::confint(Parameter))) # Reports
-# the conditional averaged parameters with their 95% confidence interval
+# the unconditional averaged parameters with their 95% confidence interval
 
 ### Improved formating:
 Parameter.model$Var <- row.names(Parameter.model)

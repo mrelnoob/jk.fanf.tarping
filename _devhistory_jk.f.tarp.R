@@ -174,7 +174,7 @@ dir.create("output/texts") # I could also create my packages directly in my func
 
 
 
-##### * 1.3. Creating scripts for custom functions -----------------------------
+##### * 1.4. Creating scripts for custom functions -----------------------------
 # ---------------------------------------------------------------------------- #
 usethis::use_pipe() # To be able to use pipes (i.e. %>%). ONLY WORKS WITH PACKAGES! If you are not
 # building a package (like me today), you'll have to explicitly call the {magrittr} package.
@@ -189,7 +189,8 @@ file.create(... = "R/02_04_reg_stripsoverlap_modelling.R")
 
 
 
-##### * 1.4. Creating reports (RMarkdown) --------------------------------------
+
+##### * 1.5. Creating reports (RMarkdown) --------------------------------------
 # ---------------------------------------------------------------------------- #
 
 file.create(... = "output/texts/exploratory_data_analyses.Rmd") # Using this command,
@@ -220,6 +221,20 @@ usethis::use_build_ignore("mybiblio.bib") # Does not exist, it's just an example
 # since Zotero tends to create long tag using the name of the 1st author, the 1st work of the title
 # and the year of publication.
 
+
+
+
+
+##### * 1.6. Add a README file to the project ----------------------------------
+# ---------------------------------------------------------------------------- #
+
+usethis::use_readme_rmd() # Creates a README.Rmd and adds it automatically to .Rbuildignore (and opens it).
+# After manually editing the file, we need to compile it into a .md document (otherwise, GitHub and
+# the CRAN won't be able to read it and display it on their websites):
+rmarkdown::render("README.Rmd")
+# As render() also produces a .html file that is not useful here, we will ignore it:
+usethis::use_build_ignore("README.html")
+usethis::use_git_ignore("README.html")
 
 
 

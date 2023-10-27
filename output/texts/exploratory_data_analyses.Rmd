@@ -1,12 +1,16 @@
 ---
-title: "Exploratory data analyses and data preparation report - Knotweed Tarping Survey (Martin *et al.*, 2023)"
+title: "Exploratory data analyses and data preparation report - Knotweed Tarping Survey
+  (Martin *et al.*, 2023)"
 author: "François-Marie Martin"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
-   html_document:
-     number_sections: yes
-     toc: yes
-     toc_depth: 5
+  html_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: 5
+  pdf_document:
+    toc: yes
+    toc_depth: '5'
 ---
 
 ```{r setup, include=FALSE}

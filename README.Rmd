@@ -16,20 +16,23 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of jk.fanf.tarping is to ...
+The `jk.fanf.tarping` project (and associated Github repository) is meant to contain all the R code I used to clean, explore, and analyse the data from the survey regarding the use of tarping (a.k.a. covering or mulch sheeting) as a control method for Japanese knotweed *s.l.* (*Reynoutria spp*) launched by Marie-Anne Dusz *et al.* (INRAE, France) in 2020.  
+In accordance to the FAIR (Findable, Accessible, Interoperable, Reusable) principles of open-science, you will find in the `jk.fanf.tarping` repository all the **data and codes** we used to produce the results presented in the manuscript we submitted to *Biological Invasions* and that is currently called "What drives the success of knotweed control by tarping?". Upon acceptance, we will update this file to link it to the DOI of the article. 
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
 
-```{r cars}
-summary(cars)
+## Content
+
+In the `jk.dusz.tarping` repository, you will find several folders (and sub-folders):
+
+* **data** -- contains the raw dataset (*data_tarping_x.csv* and its metadata PDF file) and the "cleaned" sub-datasets (i.e. those used in the analyses).
+* **output** -- contains the elements produced by the R scripts, including an **exploratory data analyses** report (EDA report, in .Rmd or .html) that was also submitted as *Electronic Supplementary Materials* along the manuscript.
+* **R** -- contains all R scripts. These are numbered. Files that start with 01_ contains the custom functions I made to wrangle, clean and prepare the data as well as those called in the .Rmd document that generates the EDA report. Files that start with 02_ contains the code I used to analyses the data and produce the results reported and discussed in the manuscript. 
+* **renv** -- contains the local library of the project. That is all the packages in the same version I used to produce the results (and as listed in the **renv.lock** file).
+
+## Download
+
+You can install the development version of `jk.dusz.tarping` from [GitHub](https://github.com/) with:
+
+``` {r, eval = FALSE}
+devtools::install_github("mrelnoob/jk.dusz.tarping")
 ```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub.

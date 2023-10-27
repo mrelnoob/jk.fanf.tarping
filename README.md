@@ -10,16 +10,15 @@ The `jk.fanf.tarping` project (and associated Github repository) is
 meant to contain all the R code I used to clean, explore, and analyse
 the data from the survey regarding the use of tarping (a.k.a. covering
 or mulch sheeting) as a control method for Japanese knotweed *s.l.*
-(*Reynoutria spp*) launched by Marie-Anne Dusz *et al.* (INRAE, France)
-in 2020.  
+(*Reynoutria spp*) that was launched at INRAE (France) in 2020.  
 In accordance to the FAIR (Findable, Accessible, Interoperable,
 Reusable) principles of open-science, you will find in the
-`jk.fanf.tarping` repository all the **data and codes** we used to
+`jk.fanf.tarping` repository all the **data and codes** I used to
 produce the results presented in the manuscript we submitted to
 *Biological Invasions* and that is currently called “What drives the
-success of knotweed control by tarping?”. Upon acceptance, we will
-update this file to link it to the DOI of the article (if you intend to
-reuse this dataset, please cite the associated article in your own
+success of knotweed control by tarping?”. Upon acceptance, I will update
+this file to link it to the DOI of the article (if you intend to reuse
+this dataset, please cite the associated article in your own
 communications).
 
 If you have any question, feel free to contact me through my Github

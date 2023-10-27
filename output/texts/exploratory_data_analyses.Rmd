@@ -45,7 +45,7 @@ Various aspects of our data (e.g. outliers, variables distribution, multicolline
 Naturally, most actual models assumptions were checked after fitting the models. Our intention here was simply to improve our knowledge of the data and identify potentially problematic variables upstream. As our global dataset contained many potential predictors (*p* = 85), much effort was indeed directed toward reducing their number and keeping only the most reliable and important ones relative to our hypotheses. In other words, we tried to reduce the dimensionality of the data.  
 It should be noted that our study is **exploratory**. That means that our goal is not to make formal inference but to *explore* potential relationships in order to generate new hypotheses (that could then be formally tested in a rigourous inferential framework). Therefore, it also means that we can slacken some modelling assumptions and that we can look at the relationships between the *response variables* and their potential *predictors* (which is absolutely forbidden when the purpose of a study is inferential). In other words, we can take some liberty because we are trying to identify relationships that should be properly tested with new data (instead of claiming that we found robust "causal" links).
 
-For the meaning of variables, the reader is referred to the Table 1 of the manuscript.*********
+For the meaning of variables, the reader is referred to the **metadata** PDF located in the "*data*" folder of the project: https://github.com/mrelnoob/jk.fanf.tarping or to the **Table 1** of the manuscript.
 \
 \
 

@@ -260,21 +260,26 @@ original <- c(
   error_rate_int,
   tpr_int
 )
-res_original <- as.data.frame(x = original, row.names = c("LogLoss", "AUC",
-                                            "R2", "Mean Error Rate", "True Positive Rate",
-                                            "LogLoss (w/ inter.)", "AUC (w/ inter.)",
-                                            "R2 (w/ inter.)", "Mean Error Rate (w/ inter.)",
-                                            "True Positive Rate (w/ inter.)")) %>%
+res_original <- as.data.frame(x = original) %>%
   dplyr::rename("Initial value" = original)
+res_original$metrics <- c("LogLoss", "AUC",
+                          "R2", "Mean Error Rate", "True Positive Rate",
+                          "LogLoss (w/ inter.)", "AUC (w/ inter.)",
+                          "R2 (w/ inter.)", "Mean Error Rate (w/ inter.)",
+                          "True Positive Rate (w/ inter.)")
 
 # Compute the mean bootstrapped results and the enhanced results:
 optimism <- apply(na.omit(res_opt$t), 2, mean)
-corrected_results <- original - optimism %>% as.data.frame(row.names = c("LogLoss", "AUC",
-                                                          "R2", "Mean Error Rate", "True Positive Rate",
-                                                          "LogLoss (w/ inter.)", "AUC (w/ inter.)",
-                                                          "R2 (w/ inter.)", "Mean Error Rate (w/ inter.)",
-                                                          "True Positive Rate (w/ inter.)"))
+corrected_results <- original - optimism %>% as.data.frame()
 res_corrected <- dplyr::rename(.data = corrected_results, "Optimism-corrected value" = .)
+res_corrected$metrics <- c("LogLoss", "AUC",
+                           "R2", "Mean Error Rate", "True Positive Rate",
+                           "LogLoss (w/ inter.)", "AUC (w/ inter.)",
+                           "R2 (w/ inter.)", "Mean Error Rate (w/ inter.)",
+                           "True Positive Rate (w/ inter.)")
+# Note that, for an unknown reason, I didn't manage to make the random number generator work as I want it to, so
+# the results vary every time you launch the code again (the seed is not set appropriately). It's not very important
+# as they always are in the same range of results but I should fix it one day.
 
 
 
@@ -355,21 +360,21 @@ pred.prob_dist_nf500  <- predict(ridge.model_int, newx = new.dist_nf500, s = min
 grDevices::jpeg(filename = here::here("output", "plots", "Figure_1.jpeg"))
 
 graphics::par(cex.lab=1.3, font.lab=2, bty = "n", fg = "gray35",
-    col.axis = "gray35", col.lab = "gray20", cex = 0.8, tcl = -0.3,
+    col.axis = "gray35", col.lab = "gray20", cex = 0.9, tcl = -0.3,
     mgp = c(2, 0.6, 0.1), oma = c(1, 0, 1, 0), lab = c(5, 10, 7))
 graphics::plot(pred.prob_dist5~new.dist5[,2], ylim = c(0,1), type = "n",
-               xlab = "Distance (m)", ylab = "Predicted probability")
+               xlab = "Distance (m)", ylab = "(Near-) eradication probability")
 graphics::lines(pred.prob_dist5~new.dist5[,2], data = new.dist5, col = "gold", lwd = 3, lty = 1,
                 panel.first = {grid(col="lavender",nx = 5,ny = 9, lty = 6)})
 graphics::lines(pred.prob_dist50~new.dist50[,2], data = new.dist50, col = "sandybrown", lwd = 3, lty = 1)
 graphics::lines(pred.prob_dist500~new.dist500[,2], data = new.dist500, col = "chocolate4", lwd = 3, lty = 1)
-graphics::lines(pred.prob_dist_nf5~new.dist_nf5[,2], data = new.dist_nf5, col = "gold", lwd = 3, lty = 3)
-graphics::lines(pred.prob_dist_nf50~new.dist_nf50[,2], data = new.dist_nf50, col = "sandybrown", lwd = 3, lty = 3)
-graphics::lines(pred.prob_dist_nf500~new.dist_nf500[,2], data = new.dist_nf500, col = "chocolate4", lwd = 3, lty = 3)
-graphics::legend(x = 3, y = 0.7,
+graphics::lines(pred.prob_dist_nf5~new.dist_nf5[,2], data = new.dist_nf5, col = "gold", lwd = 3, lty = 4)
+graphics::lines(pred.prob_dist_nf50~new.dist_nf50[,2], data = new.dist_nf50, col = "sandybrown", lwd = 3, lty = 4)
+graphics::lines(pred.prob_dist_nf500~new.dist_nf500[,2], data = new.dist_nf500, col = "chocolate4", lwd = 3, lty = 4)
+graphics::legend(x = 3, y = 0.6,
                  legend = c("Fully tarped", "Not fully tarped", "Stand surface 5 m2", "Stand surface 50 m2",
                             "Stand surface 500 m2"),
-                 col = c("black", "black", "gold", "sandybrown", "chocolate4"), lty = c(1,3,1,1,1),
+                 col = c("black", "black", "gold", "sandybrown", "chocolate4"), lty = c(1,4,1,1,1),
                  lwd = 3, bty = "n", cex = 1.1)
 dev.off()
 
@@ -377,20 +382,20 @@ dev.off()
 grDevices::pdf(file = here::here("output", "plots", "Figure_1.pdf"))
 
 graphics::par(cex.lab=1.3, font.lab=2, bty = "n", fg = "gray35",
-              col.axis = "gray35", col.lab = "gray20", cex = 0.8, tcl = -0.3,
+              col.axis = "gray35", col.lab = "gray20", cex = 0.9, tcl = -0.3,
               mgp = c(2, 0.6, 0.1), oma = c(1, 0, 1, 0), lab = c(5, 10, 7))
 graphics::plot(pred.prob_dist5~new.dist5[,2], ylim = c(0,1), type = "n",
-               xlab = "Distance (m)", ylab = "Predicted probability")
+               xlab = "Distance (m)", ylab = "(Near-) eradication probability")
 graphics::lines(pred.prob_dist5~new.dist5[,2], data = new.dist5, col = "gold", lwd = 3, lty = 1,
                 panel.first = {grid(col="lavender",nx = 5,ny = 9, lty = 6)})
 graphics::lines(pred.prob_dist50~new.dist50[,2], data = new.dist50, col = "sandybrown", lwd = 3, lty = 1)
 graphics::lines(pred.prob_dist500~new.dist500[,2], data = new.dist500, col = "chocolate4", lwd = 3, lty = 1)
-graphics::lines(pred.prob_dist_nf5~new.dist_nf5[,2], data = new.dist_nf5, col = "gold", lwd = 3, lty = 3)
-graphics::lines(pred.prob_dist_nf50~new.dist_nf50[,2], data = new.dist_nf50, col = "sandybrown", lwd = 3, lty = 3)
-graphics::lines(pred.prob_dist_nf500~new.dist_nf500[,2], data = new.dist_nf500, col = "chocolate4", lwd = 3, lty = 3)
-graphics::legend(x = 3, y = 0.7,
+graphics::lines(pred.prob_dist_nf5~new.dist_nf5[,2], data = new.dist_nf5, col = "gold", lwd = 3, lty = 4)
+graphics::lines(pred.prob_dist_nf50~new.dist_nf50[,2], data = new.dist_nf50, col = "sandybrown", lwd = 3, lty = 4)
+graphics::lines(pred.prob_dist_nf500~new.dist_nf500[,2], data = new.dist_nf500, col = "chocolate4", lwd = 3, lty = 4)
+graphics::legend(x = 3, y = 0.6,
                  legend = c("Fully tarped", "Not fully tarped", "Stand surface 5 m2", "Stand surface 50 m2",
                             "Stand surface 500 m2"),
-                 col = c("black", "black", "gold", "sandybrown", "chocolate4"), lty = c(1,3,1,1,1),
+                 col = c("black", "black", "gold", "sandybrown", "chocolate4"), lty = c(1,4,1,1,1),
                  lwd = 3, bty = "n", cex = 1.1)
 dev.off()

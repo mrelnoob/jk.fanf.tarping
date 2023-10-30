@@ -1,0 +1,11 @@
+Optimism-corrected value;metrics
+0,591032422;LogLoss
+0,782065312;AUC
+0,131751589;R2
+0,277388235;Mean Error Rate
+0,625037675;True Positive Rate
+0,567905166;LogLoss (w/ inter.)
+0,799063317;AUC (w/ inter.)
+0,182972217;R2 (w/ inter.)
+0,269;Mean Error Rate (w/ inter.)
+0,648030687;True Positive Rate (w/ inter.)

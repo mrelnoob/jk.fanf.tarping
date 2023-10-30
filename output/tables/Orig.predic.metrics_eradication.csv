@@ -1,0 +1,11 @@
+Initial value;metrics
+0,40490027;LogLoss
+0,89683871;AUC
+0,440824719;R2
+0,17041932;Mean Error Rate
+0,749677419;True Positive Rate
+0,372273509;LogLoss (w/ inter.)
+0,909796894;AUC (w/ inter.)
+0,481480329;R2 (w/ inter.)
+0,152941176;Mean Error Rate (w/ inter.)
+0,806451613;True Positive Rate (w/ inter.)
